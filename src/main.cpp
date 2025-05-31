@@ -1,18 +1,25 @@
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+#ifdef NATIVE
+/**
+ * @fn main
+ * @brief
+ * main method added so that code can be compiled using native environment with library ArduinoFake
+ */
+int main() {
+    setup();
+    while (1) {
+        loop();
+    }
+    return 0;
 }
+
+#endif
