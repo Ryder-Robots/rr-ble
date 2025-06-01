@@ -28,6 +28,7 @@ void test_binary_search(void) {
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_split_string);
+    RUN_TEST(test_binary_search);
     return UNITY_END();
 }
 

@@ -34,9 +34,9 @@ const int RR_COMMANDS[] = {
     216,  // MSP_SENSOR_ACC
     217,  // MSP_SENSOR_GYRO
     218,  // MSP_SENSOR_MAG
-    223,  // MSP_ROTATE
     220,  // MSP_STOP
     221,  // MSP_MOVE
+    223,  // MSP_ROTATE
 };
 
 const int MSP_SONAR_ALTITUDE_P = 0;
