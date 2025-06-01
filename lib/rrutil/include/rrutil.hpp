@@ -44,7 +44,7 @@ const int RR_COMMANDS[] = {
 
 const int MSP_NONE = 0;
 const int MSP_SONAR_ALTITUDE_P = 1;
-const int MSP_SENSOR_ACC_P_P = 2;
+const int MSP_SENSOR_ACC_P = 2;
 const int MSP_SENSOR_GYRO_P = 3;
 const int MSP_SENSOR_MAG_P = 4;
 const int MSP_STOP_P = 5;

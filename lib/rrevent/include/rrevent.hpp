@@ -15,21 +15,24 @@ class rrevent {
      * @param data An array of String objects containing event data.
      * @param mcount The number of elements in the data array to copy.
      */
-    rrevent(const int cmd, const size_t sz, String data[]) : _cmd(cmd), _sz(sz) {
-        for (size_t i = 0; i < RLEN(data); ++i) {
-            _data[i] = data[i];
-        }
-        _mcount = RLEN(data) - 3;
+    rrevent(const int cmd, const size_t sz, const String data[]) : _cmd(cmd), _sz(sz) {
+        _data = reinterpret_cast<String*>(malloc(sz));
+        memcpy(_data, data, sz);
     }
 
-    rrevent(const int cmd, const size_t sz):  _cmd(cmd), _sz(sz) {}
+    rrevent(const int cmd, const size_t sz) : _cmd(cmd), _sz(sz) {}
 
     /**
      * @brief Destructor for the rrevent class.
      *
      * Defaulted destructor. Cleans up resources used by the rrevent object.
      */
-    ~rrevent() = default;
+    ~rrevent() {
+        if (_data != nullptr) {
+            free(_data);
+            _data = nullptr;
+        }
+    }
 
     /**
      * @brief Retrieves the command identifier associated with the event.
@@ -48,24 +51,14 @@ class rrevent {
     /**
      * @brief Retrieves a pointer to the array of String objects containing event data.
      *
-     * @return Pointer to the array of String objects.
-     * 
-     * @warning data MUST be deleted after it is returned, it is a trimmed copy of the original object therefore, it will
-     * use memory.
+     * @return Pointer to the array of String objects..
      */
-    String* get_data() { 
-        // trim array size.
-        String* data = reinterpret_cast<String*>(malloc(sizeof(_mcount * sizeof(_data[0]))));
-        for (int i = 0; i < _mcount; i++) {
-            data[i] = _data[i];
-        }
-        return data;
-     }
+    String* get_data() { return _data; }
 
    private:
     const int _cmd;
-    const size_t _sz;
-    String _data[RR_MX_E_SZ];
+    const size_t _sz = 0;
+    String* _data = nullptr;
     int _mcount = 0;
 };
 }  // namespace rrobot
