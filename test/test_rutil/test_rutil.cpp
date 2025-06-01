@@ -1,5 +1,6 @@
 #include <ArduinoFake.h>
 #include <unity.h>
+
 #include <rrutil.hpp>
 
 using namespace rrobot;
@@ -12,6 +13,16 @@ void test_split_string(void) {
     TEST_ASSERT_EQUAL_STRING("101", results[0].c_str());
     TEST_ASSERT_EQUAL_STRING("0", results[1].c_str());
     TEST_ASSERT_EQUAL_STRING("0", results[2].c_str());
+}
+
+void test_binary_search(void) { 
+    TEST_ASSERT_EQUAL_INT(MSP_SONAR_ALTITUDE_P, binary_search(RR_COMMANDS, RR_CMDSZ, RR_COMMANDS[MSP_SONAR_ALTITUDE_P]));
+    TEST_ASSERT_EQUAL_INT(MSP_SENSOR_ACC_P_P, binary_search(RR_COMMANDS, RR_CMDSZ, RR_COMMANDS[MSP_SENSOR_ACC_P_P]));
+    TEST_ASSERT_EQUAL_INT(MSP_SENSOR_GYRO_P, binary_search(RR_COMMANDS, RR_CMDSZ, RR_COMMANDS[MSP_SENSOR_GYRO_P]));
+    TEST_ASSERT_EQUAL_INT(MSP_SENSOR_MAG_P, binary_search(RR_COMMANDS, RR_CMDSZ, RR_COMMANDS[MSP_SENSOR_MAG_P]));
+    TEST_ASSERT_EQUAL_INT(MSP_ROTATE_P, binary_search(RR_COMMANDS, RR_CMDSZ, RR_COMMANDS[MSP_ROTATE_P]));
+    TEST_ASSERT_EQUAL_INT(MSP_STOP_P, binary_search(RR_COMMANDS, RR_CMDSZ, RR_COMMANDS[MSP_STOP_P]));
+    TEST_ASSERT_EQUAL_INT(MSP_MOVE_P, binary_search(RR_COMMANDS, RR_CMDSZ, RR_COMMANDS[MSP_MOVE_P]));
 }
 
 int runUnityTests(void) {
