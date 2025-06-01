@@ -49,6 +49,9 @@ const int MSP_MOVE_P = 6;
 
 const int RR_CMDSZ = (sizeof(RR_COMMANDS) / sizeof(int));
 
+const char _TERM_CHAR = 0x1E;
+const char _DELIMETER = 0x3B;
+
 /**
  * @brief Splits a string into parts based on a delimiter.
  *
