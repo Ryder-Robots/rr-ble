@@ -16,8 +16,9 @@ class rrevent {
      * @param mcount The number of elements in the data array to copy.
      */
     rrevent(const int cmd, const size_t sz, const String data[]) : _cmd(cmd), _sz(sz) {
-        _data = reinterpret_cast<String*>(malloc(sz));
-        memcpy(_data, data, sz);
+        for (int i = 0; i < sz; i++) {
+            _data[i] = String(data[i].c_str());
+        }
     }
 
     rrevent(const int cmd, const size_t sz) : _cmd(cmd), _sz(sz) {}
@@ -27,12 +28,7 @@ class rrevent {
      *
      * Defaulted destructor. Cleans up resources used by the rrevent object.
      */
-    ~rrevent() {
-        if (_data != nullptr) {
-            free(_data);
-            _data = nullptr;
-        }
-    }
+    ~rrevent() = default;
 
     /**
      * @brief Retrieves the command identifier associated with the event.
@@ -53,13 +49,12 @@ class rrevent {
      *
      * @return Pointer to the array of String objects..
      */
-    String* get_data() { return _data; }
+    String get_data(int i) { return _data[i]; }
 
    private:
     const int _cmd;
     const size_t _sz = 0;
-    String* _data = nullptr;
-    int _mcount = 0;
+    String _data[RR_MX_E_SZ];
 };
 }  // namespace rrobot
 

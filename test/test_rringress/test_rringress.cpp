@@ -1,7 +1,7 @@
 #include <ArduinoFake.h>
 #include <unity.h>
 
-#include <rrobot.hpp>
+#include <rringress.hpp>
 
 using namespace rrobot;
 
@@ -10,14 +10,29 @@ void create_event(void) {
     rrevent e(218, 3, s);
     TEST_ASSERT_EQUAL_INT(218, e.get_cmd());
     TEST_ASSERT_EQUAL_size_t(3, e.get_sz());
-    TEST_ASSERT_EQUAL_INT(0, e.get_data()[0].equals("0"));
-    TEST_ASSERT_EQUAL_INT(0, e.get_data()[1].equals("0"));
-    TEST_ASSERT_EQUAL_INT(0, e.get_data()[2].equals("0"));
+    TEST_ASSERT_EQUAL_STRING("0", e.get_data(0).c_str());
+    TEST_ASSERT_EQUAL_STRING("0", e.get_data(1).c_str());
+    TEST_ASSERT_EQUAL_STRING("0", e.get_data(2).c_str());    
+}
+
+void deserialize_no_data(void) {
+    rrevent e = rringress::deserialize("218;0;0;");
+    TEST_ASSERT_EQUAL_INT(218, e.get_cmd());
+    TEST_ASSERT_EQUAL_INT(0, e.get_sz());
+}
+
+void deserialize_with_data(void) {
+    rrevent e = rringress::deserialize("218;7;0;1;1;2;3;");
+
+    TEST_ASSERT_EQUAL_INT(218, e.get_cmd());
+    TEST_ASSERT_EQUAL_INT(4, e.get_sz());    
 }
 
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(create_event);
+    RUN_TEST(deserialize_no_data);
+    RUN_TEST(deserialize_with_data);
     return UNITY_END();
 }
 
