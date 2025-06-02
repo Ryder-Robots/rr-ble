@@ -12,7 +12,7 @@ void create_event(void) {
     TEST_ASSERT_EQUAL_size_t(3, e.get_sz());
     TEST_ASSERT_EQUAL_STRING("0", e.get_data(0).c_str());
     TEST_ASSERT_EQUAL_STRING("0", e.get_data(1).c_str());
-    TEST_ASSERT_EQUAL_STRING("0", e.get_data(2).c_str());    
+    TEST_ASSERT_EQUAL_STRING("0", e.get_data(2).c_str());
 }
 
 void deserialize_no_data(void) {
@@ -25,7 +25,11 @@ void deserialize_with_data(void) {
     rrevent e = rringress::deserialize("218;7;0;1;1;2;3;");
 
     TEST_ASSERT_EQUAL_INT(218, e.get_cmd());
-    TEST_ASSERT_EQUAL_INT(4, e.get_sz());    
+    TEST_ASSERT_EQUAL_INT(4, e.get_sz());
+    TEST_ASSERT_EQUAL_STRING("1", e.get_data(0).c_str());
+    TEST_ASSERT_EQUAL_STRING("1", e.get_data(1).c_str());
+    TEST_ASSERT_EQUAL_STRING("2", e.get_data(2).c_str());
+    TEST_ASSERT_EQUAL_STRING("3", e.get_data(3).c_str());
 }
 
 int runUnityTests(void) {
