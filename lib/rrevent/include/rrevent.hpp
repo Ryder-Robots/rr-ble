@@ -21,7 +21,7 @@ class rrevent {
         }
     }
 
-    rrevent(const int cmd, const size_t sz) : _cmd(cmd), _sz(sz) {}
+    rrevent(const int cmd, const size_t sz = 0) : _cmd(cmd), _sz(sz) {}
 
     /**
      * @brief Destructor for the rrevent class.
