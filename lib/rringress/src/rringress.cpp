@@ -21,8 +21,7 @@ rrevent rringress::deserialize(const String in) {
         for (int i = 3; i < mcount; i++) {
             data[i - 3] = String(result[i].c_str());
         }
-        rrevent e =  rrevent(static_cast<int>(result[0].toInt()), (sz - 3), data);
-        return e;
+        return rrevent(static_cast<int>(result[0].toInt()), (sz - 3), data);
     }
     return rrevent(static_cast<int>(result[0].toInt()), sz);
 }
