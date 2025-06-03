@@ -2,6 +2,10 @@
 
 using namespace rrobot;
 
+// contains current state of robot during movements
+int cstate_ = RR_ST_;
+
+// TODO: add timer to here, that also includes movement commands for callback
 void setup() {}
 
 void loop() {
@@ -9,7 +13,7 @@ void loop() {
     if (!Serial.available()) {
         return;
     }
-    uint8_t buf[BUFSIZ];
+    char buf[BUFSIZ];
     const size_t sz = Serial.readBytesUntil(_TERM_CHAR, buf, BUFSIZ);
 
     // check last char is _TERM_CHAR
@@ -17,13 +21,16 @@ void loop() {
         return;
     }
 
-    String s = String(reinterpret_cast<char*>(buf));
+    // convert termination character to nullptr 
+    buf[sz - 1] = '\0';
+    String s(buf);
     rrevent e = rringress::deserialize(s);
     if (e.get_cmd() == RR_COMMANDS[MSP_NONE]) {
         return;
     }
 
-    // get next action command.
+    // get next action command.  TODO: need to send result back.
+    rrfunctions::_functions[e.get_cmd()](e, cstate_);
 }
 
 #ifdef NATIVE

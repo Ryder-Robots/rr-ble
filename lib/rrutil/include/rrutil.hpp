@@ -53,7 +53,6 @@ const int MSP_ROTATE_P = 7;
 
 const int RR_CMDSZ = (sizeof(RR_COMMANDS) / sizeof(int));
 const size_t RR_MX_E_SZ = 100;
-
 const char _TERM_CHAR = 0x1E;
 const char _DELIMETER = 0x3B;
 
