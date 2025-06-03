@@ -2,20 +2,28 @@
 
 using namespace rrobot;
 
-void setup() {
-}
+void setup() {}
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  if (Serial.available()) {
-      uint8_t buf[BUFSIZ];
-      Serial.readBytesUntil(_TERM_CHAR, buf, BUFSIZ);
+    // put your main code here, to run repeatedly:
+    if (!Serial.available()) {
+        return;
+    }
+    uint8_t buf[BUFSIZ];
+    const size_t sz = Serial.readBytesUntil(_TERM_CHAR, buf, BUFSIZ);
 
-      // check last char is _TERM_CHAR
+    // check last char is _TERM_CHAR
+    if (sz > 0 && buf[sz - 1] != _TERM_CHAR) {
+        return;
+    }
 
-      String s = String(reinterpret_cast<char*>(buf));
-      rrevent e = rringress::deserialize(s);
-  }
+    String s = String(reinterpret_cast<char*>(buf));
+    rrevent e = rringress::deserialize(s);
+    if (e.get_cmd() == RR_COMMANDS[MSP_NONE]) {
+        return;
+    }
+
+    // get next action command.
 }
 
 #ifdef NATIVE
