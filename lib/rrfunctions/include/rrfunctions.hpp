@@ -12,6 +12,9 @@ using execfunction = std::function<rrevent(rrevent, int&)>;
 #define RR_ST_ 2
 #define RR_RT_ 3
 
+// instructs command loop to continue on with last action.
+#define RR_NN_ 4
+
 namespace rrobot {
 namespace rrfunctions {
 const execfunction _functions[] = {};
