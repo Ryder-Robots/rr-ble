@@ -11,6 +11,7 @@ void setup() {}
 void loop() {
     // put your main code here, to run repeatedly:
     if (!Serial.available()) {
+        Serial.print(serde::serialize(rrfunctions::_functions[MSP_NONE](rrevent(MSP_NONE), cstate_)));
         return;
     }
     char buf[BUFSIZ];
@@ -18,6 +19,7 @@ void loop() {
 
     // check last char is _TERM_CHAR
     if (sz > 0 && buf[sz - 1] != _TERM_CHAR) {
+        Serial.print(serde::serialize(rrfunctions::_functions[MSP_NONE](rrevent(MSP_NONE), cstate_)));
         return;
     }
 
@@ -26,10 +28,10 @@ void loop() {
     String s(buf);
     rrevent e = serde::deserialize(s);
     if (e.get_cmd() == RR_COMMANDS[MSP_NONE]) {
+        Serial.print(serde::serialize(rrfunctions::_functions[MSP_NONE](rrevent(MSP_NONE), cstate_)));
         return;
     }
 
-    // get next action command.  TODO: need to send result back.
     sz = Serial.print(serde::serialize(rrfunctions::_functions[e.get_cmd()](e, cstate_)));
 }
 
