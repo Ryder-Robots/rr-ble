@@ -1,7 +1,7 @@
 #include <ArduinoFake.h>
 #include <unity.h>
 
-#include <rringress.hpp>
+#include <serde.hpp>
 
 using namespace rrobot;
 
@@ -16,13 +16,13 @@ void create_event(void) {
 }
 
 void deserialize_no_data(void) {
-    rrevent e = rringress::deserialize("218;0;0;");
+    rrevent e = serde::deserialize("218;0;0;");
     TEST_ASSERT_EQUAL_INT(218, e.get_cmd());
     TEST_ASSERT_EQUAL_INT(0, e.get_sz());
 }
 
 void deserialize_with_data(void) {
-    rrevent e = rringress::deserialize("218;7;0;1;1;2;3;");
+    rrevent e = serde::deserialize("218;7;0;1;1;2;3;");
 
     TEST_ASSERT_EQUAL_INT(218, e.get_cmd());
     TEST_ASSERT_EQUAL_INT(4, e.get_sz());
