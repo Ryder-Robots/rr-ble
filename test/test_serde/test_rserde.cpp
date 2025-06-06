@@ -32,11 +32,20 @@ void deserialize_with_data(void) {
     TEST_ASSERT_EQUAL_STRING("3", e.get_data(3).c_str());
 }
 
+void serialize_with_data(void) {
+    rrevent e = serde::deserialize("218;7;0;1;1;2;3;");
+    String s = serde::serialize(e);
+
+    String out = "218;8;41667;1;1;2;3;\x1E";
+    TEST_ASSERT_EQUAL_STRING(out.c_str(), s.c_str());
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(create_event);
     RUN_TEST(deserialize_no_data);
     RUN_TEST(deserialize_with_data);
+    RUN_TEST(serialize_with_data);
     return UNITY_END();
 }
 
