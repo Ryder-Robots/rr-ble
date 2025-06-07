@@ -17,10 +17,18 @@ void test_noneDoesSetState(void) {
     TEST_ASSERT_EQUAL_INT(RR_ST_, _state);
 }
 
+void test_moveUsingArrayCall(void) {
+    int _state = RR_ST_;
+    rrevent e = rrevent(RR_COMMANDS[MSP_MOVE_P]);
+    rrfunctions::_functions[POS(e.get_cmd())](e, _state);
+    TEST_ASSERT_EQUAL_INT(RR_MV_, _state);
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_moveDoesSetState);
     RUN_TEST(test_noneDoesSetState);
+    RUN_TEST(test_moveUsingArrayCall);
     return UNITY_END();
 }
 
