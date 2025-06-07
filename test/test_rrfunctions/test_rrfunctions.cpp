@@ -13,7 +13,7 @@ void test_moveDoesSetState(void) {
 
 void test_noneDoesSetState(void) {
     int _state = RR_ST_;
-    rrfunctions::move_r(rrevent(RR_COMMANDS[MSP_NONE]), _state);
+    rrfunctions::none_r(rrevent(RR_COMMANDS[MSP_NONE]), _state);
     TEST_ASSERT_EQUAL_INT(RR_ST_, _state);
 }
 

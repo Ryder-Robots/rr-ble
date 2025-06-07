@@ -1,3 +1,4 @@
+
 #include <rrfunctions.hpp>
 
 using namespace rrobot;
@@ -27,7 +28,22 @@ rrevent rrfunctions::sen_gyro_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
 
 rrevent rrfunctions::sen_mag_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
 
-rrevent rrfunctions::stop_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
+/**
+ * @brief Handles the stop event for the robot.
+ *
+ * This method sets the state variable to indicate a move operation and returns
+ * an event indicating that a stop should be performed. It is typically called
+ * when a stop command is received and prepares the system to execute the stop.
+ *
+ * @param e The input event triggering the move.
+ * @param s Reference to the state variable to be updated for move operation.
+ * @return rrevent An event indicating a move should be performed (MSP_MOVE_P).
+ */
+rrevent rrfunctions::stop_r(rrevent e, int& s) {
+        s = RR_ST_;
+    return rrevent(MSP_NONE);
+}
+
 
 /**
  * @brief Handles the move event for the robot.
@@ -43,8 +59,20 @@ rrevent rrfunctions::stop_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
 rrevent rrfunctions::move_r(const rrevent e, int& s) {
     // load a trigger for move.
     s = RR_MV_;
-    return rrevent(MSP_MOVE_P);
+    rrevent out = rrevent(RR_COMMANDS[MSP_MOVE_P]);
+    return out;
 }
 
-// TODO: implement this method
+/**
+ * @brief Handles the rotation event for the robot.
+ *
+ * This method is intended to process rotation commands for the robot. When invoked,
+ * it should update the robot's state to reflect a rotation operation and return an
+ * event indicating that a rotation should be performed. Currently, this function is
+ * a placeholder and does not implement any rotation logic.
+ *
+ * @param e The input event that triggers the rotation handling.
+ * @param s Reference to the state variable, which should be updated for rotation.
+ * @return rrevent An event indicating the result of the rotation handling (currently MSP_NONE).
+ */
 rrevent rrfunctions::rotate_r(rrevent e, int& s) { return rrevent(MSP_NONE); }

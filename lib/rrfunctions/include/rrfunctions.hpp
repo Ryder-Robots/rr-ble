@@ -6,7 +6,7 @@
 #include <rrutil.hpp>
 
 using namespace rrobot;
-using execfunction = std::function<rrevent(rrevent, int&)>;
+using execfunction = std::function<rrevent(rrevent&, int&)>;
 
 #define RR_ST_ 220
 #define RR_MV_ 221

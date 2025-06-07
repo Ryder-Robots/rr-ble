@@ -14,6 +14,7 @@
 namespace rrobot {
 
 #define RLEN(X) (sizeof(X) / sizeof(X[0]))
+#define POS(X) binary_search(RR_COMMANDS, RR_CMDSZ, X)
 
 /**
  * @brief Array of command identifiers used by the rrobot system.
