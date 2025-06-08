@@ -25,6 +25,8 @@ void setup() {
         // hard block here.
         while(1){}        
     }
+
+    //TODO need to initilize sonar here
 }
 
 void loop() {

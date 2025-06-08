@@ -2,6 +2,7 @@
 #define RUTIL_HPP
 
 #include <Arduino.h>
+#include <mbed.h>
 
 /**
  * @file rrutil.hpp

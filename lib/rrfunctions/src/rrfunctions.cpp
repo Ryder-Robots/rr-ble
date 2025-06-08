@@ -22,7 +22,29 @@ rrevent rrfunctions::none_r(rrevent e, int& s) {
 
 rrevent rrfunctions::sonar_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
 
-rrevent rrfunctions::sen_acc_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
+/**
+ * @brief Handles the accelometer sensor event for the robot.
+ *
+ * This function reads the accelometer data from the IMU sensor if available.
+ * It retrieves the X, Y, and Z components of the accelometer and packages them
+ * into a response event. If the accelometer data is not available, it returns
+ * an event indicating no operation.
+ *
+ * @param e The input event that triggered the accelometer sensor reading.
+ * @param s Reference to the state variable (unused in this function).
+ * @return rrevent An event containing the accelometer  sensor data if available,
+ *                 or an event indicating no operation (MSP_NONE) if not available.
+ */
+rrevent rrfunctions::sen_acc_r(rrevent e, int& s) {
+    float x = 0, y = 0, z = 0;
+    if (!IMU.accelerationAvailable()) {
+        return rrevent(MSP_NONE);
+    }
+    IMU.readAcceleration(x, y, z);
+    String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
+    rrevent r = rrevent(POS(MSP_SENSOR_ACC_P), 4, data);
+    return r;
+}
 
 /**
  * @brief Handles the gyroscope sensor event for the robot.
@@ -130,7 +152,14 @@ rrevent rrfunctions::move_r(const rrevent e, int& s) {
  */
 rrevent rrfunctions::rotate_r(rrevent e, int& s) {
     stop_r(POS(MSP_STOP_P), s);
+
+    // check that inputs are available for attempting a rotation.
+    if (e.get_sz() < 4) {
+        return none_r(e, s);
+    }
+
     rrevent mag = sen_gyro_r(rrevent(POS(MSP_SENSOR_MAG_P)), s);
+    int r = 0b1001;
 
     // rotate vector 1 to be equal to v2
     // rotate right 0b1001
@@ -142,16 +171,25 @@ rrevent rrfunctions::rotate_r(rrevent e, int& s) {
     }
     // rotate left 0b0110
     else {
+        r = 0b0110;
         digitalWrite(rrhbridge_map::_IN1, LOW);
         digitalWrite(rrhbridge_map::_IN2, HIGH);
         digitalWrite(rrhbridge_map::_IN3, HIGH);
         digitalWrite(rrhbridge_map::_IN4, LOW);
     }
     // limit precision to two decimal places, to avoid under and over rotations.
-    float xin = atof(e.get_data(r_imu_po::_X_P).c_str()), xout = atof(mag.get_data(r_imu_po::_X_P).c_str());
+    float xin = atof(e.get_data(r_imu_po::_X_P).c_str()), xout = atof(mag.get_data(r_imu_po::_X_P).c_str()), x1 = xin,
+          x2 = xout;
+    if (r == 0b1001) {
+        x1 = xin;
+        x2 = xout;
+    } else {
+        x1 = xout;
+        x2 = xin;
+    }
 
     // TODO: it just has to be opposite of what it was. dont think they'll ever be truly equal,
-    while (xin != xout) {
+    while (x1 > x2) {
         analogWrite(rrhbridge_map::_ENA, rrhbridge_map::_PWM_VALUE);
         analogWrite(rrhbridge_map::_ENB, rrhbridge_map::_PWM_VALUE);
 
@@ -159,6 +197,13 @@ rrevent rrfunctions::rotate_r(rrevent e, int& s) {
         delay(50);
         rrevent mag = sen_gyro_r(rrevent(POS(MSP_SENSOR_MAG_P)), s);
         xout = atof(mag.get_data(r_imu_po::_X_P).c_str());
+        if (r == 0b1001) {
+            x1 = xin;
+            x2 = xout;
+        } else {
+            x1 = xout;
+            x2 = xin;
+        }
     }
 
     // using event rotate robot to values of mag.
