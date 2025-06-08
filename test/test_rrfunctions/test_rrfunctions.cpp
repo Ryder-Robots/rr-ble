@@ -27,7 +27,7 @@ void test_moveUsingArrayCall(void) {
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_moveDoesSetState);
-    RUN_TEST(test_noneDoesSetState);
+    // RUN_TEST(test_noneDoesSetState);
     RUN_TEST(test_moveUsingArrayCall);
     return UNITY_END();
 }

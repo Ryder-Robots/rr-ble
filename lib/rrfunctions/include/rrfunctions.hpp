@@ -22,7 +22,7 @@ using execfunction = std::function<rrevent(rrevent&, int&)>;
 
 namespace rrobot {
 
-namespace rrfunctions {
+namespace rrfunctions { 
 
 // list of events that can be triggered
 rrevent none_r(rrevent e, int& s);
