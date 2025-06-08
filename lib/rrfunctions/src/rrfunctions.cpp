@@ -1,4 +1,3 @@
-
 #include <rrfunctions.hpp>
 
 using namespace rrobot;
@@ -40,10 +39,17 @@ rrevent rrfunctions::sen_mag_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
  * @return rrevent An event indicating a move should be performed (MSP_MOVE_P).
  */
 rrevent rrfunctions::stop_r(rrevent e, int& s) {
+    s = RR_ST_;
+    if (s != RR_ST_) {
         s = RR_ST_;
-    return rrevent(MSP_NONE);
+    }
+    // place motor in stop state after action completed.
+    digitalWrite(rrhbridge_map::_IN1, LOW);
+    digitalWrite(rrhbridge_map::_IN2, LOW);
+    digitalWrite(rrhbridge_map::_IN3, LOW);
+    digitalWrite(rrhbridge_map::_IN4, LOW);
+    return rrevent(POS(MSP_STOP_P));
 }
-
 
 /**
  * @brief Handles the move event for the robot.
@@ -75,4 +81,36 @@ rrevent rrfunctions::move_r(const rrevent e, int& s) {
  * @param s Reference to the state variable, which should be updated for rotation.
  * @return rrevent An event indicating the result of the rotation handling (currently MSP_NONE).
  */
-rrevent rrfunctions::rotate_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
+// left 0b0110
+// right 0b1001
+rrevent rrfunctions::rotate_r(rrevent e, int& s) {
+    analogWrite(rrhbridge_map::_ENA, rrhbridge_map::_PWM_VALUE);
+    analogWrite(rrhbridge_map::_ENB, rrhbridge_map::_PWM_VALUE);
+
+    // using event rotate robot to values of mag.
+    stop_r(POS(MSP_STOP_P), s);
+    return rrevent(POS(MSP_ROTATE_P));
+}
+
+/**
+ * @brief Executes a forward movement operation for the robot.
+ *
+ * This function sets the robot's state to indicate a move operation and configures
+ * the H-bridge motor driver to drive both motors forward. It sets the appropriate
+ * PWM values and digital signals to the motor control pins to achieve forward motion.
+ *
+ * @param s Reference to the state variable. If not already set to the move state (RR_MV_),
+ *          it will be updated accordingly.
+ */
+// forward is 0b1010
+void move_t(int& s) {
+    if (s != RR_MV_) {
+        s = RR_MV_;
+    }
+    analogWrite(rrhbridge_map::_ENA, rrhbridge_map::_PWM_VALUE);
+    analogWrite(rrhbridge_map::_ENB, rrhbridge_map::_PWM_VALUE);
+    digitalWrite(rrhbridge_map::_IN1, HIGH);
+    digitalWrite(rrhbridge_map::_IN2, LOW);
+    digitalWrite(rrhbridge_map::_IN3, HIGH);
+    digitalWrite(rrhbridge_map::_IN4, LOW);
+}

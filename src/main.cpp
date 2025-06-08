@@ -6,7 +6,13 @@ using namespace rrobot;
 int cstate_ = RR_ST_;
 
 // TODO: add timer to here, that also includes movement commands for callback
-void setup() {}
+void setup() {
+    // configure H bridge
+    for (auto i : {rrhbridge_map::_ENA, rrhbridge_map::_ENB, rrhbridge_map::_IN1, rrhbridge_map::_IN2,
+                   rrhbridge_map::_IN3, rrhbridge_map::_IN4}) {
+        pinMode(i, OUTPUT);
+    }
+}
 
 void loop() {
     // put your main code here, to run repeatedly:
@@ -25,7 +31,7 @@ void loop() {
         return;
     }
 
-    // convert termination character to nullptr 
+    // convert termination character to nullptr
     buf[sz - 1] = '\0';
     String s(buf);
     rrevent e = serde::deserialize(s);
