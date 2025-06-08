@@ -4,6 +4,7 @@
 #include <rrfunctions.hpp>
 
 using namespace rrobot;
+using namespace fakeit;
 
 void test_moveDoesSetState(void) {
     int _state = RR_ST_;
@@ -12,9 +13,15 @@ void test_moveDoesSetState(void) {
 }
 
 void test_noneDoesSetState(void) {
+    When(Method(ArduinoFake(), analogWrite)).AlwaysReturn();
+    When(Method(ArduinoFake(), digitalWrite)).AlwaysReturn();
+
     int _state = RR_ST_;
     rrfunctions::none_r(rrevent(RR_COMMANDS[MSP_NONE]), _state);
     TEST_ASSERT_EQUAL_INT(RR_ST_, _state);
+
+    Verify(Method(ArduinoFake(), analogWrite).Using(rrhbridge_map::_ENA, 0)).Once();
+    Verify(Method(ArduinoFake(), analogWrite).Using(rrhbridge_map::_ENB, 0)).Once();
 }
 
 void test_moveUsingArrayCall(void) {
@@ -27,7 +34,7 @@ void test_moveUsingArrayCall(void) {
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_moveDoesSetState);
-    // RUN_TEST(test_noneDoesSetState);
+    RUN_TEST(test_noneDoesSetState);
     RUN_TEST(test_moveUsingArrayCall);
     return UNITY_END();
 }
