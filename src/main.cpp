@@ -7,10 +7,23 @@ int cstate_ = RR_ST_;
 
 // TODO: add timer to here, that also includes movement commands for callback
 void setup() {
+
+    // Initlilize USB first!!!!
+    Serial.begin(rserial::_BOARDRATE);
+
     // configure H bridge
     for (auto i : {rrhbridge_map::_ENA, rrhbridge_map::_ENB, rrhbridge_map::_IN1, rrhbridge_map::_IN2,
                    rrhbridge_map::_IN3, rrhbridge_map::_IN4}) {
         pinMode(i, OUTPUT);
+    }
+
+    // Initilize IMU
+    if (!IMU.begin()) {
+        rrevent e = rrevent(MSP_NONE);
+        Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_)));
+
+        // hard block here.
+        while(1){}        
     }
 }
 

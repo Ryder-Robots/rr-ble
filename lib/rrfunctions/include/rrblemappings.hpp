@@ -40,6 +40,17 @@ namespace rrhbridge_map {
 
     const int _PWM_VALUE = 255/2;
 }
+
+namespace rserial {
+    const int _BOARDRATE = 9600;
+}
+
+namespace r_imu_po {
+    const int _AVAIL_P = 0;
+    const int _X_P = 1;
+    const int _Y_P = 2;
+    const int _Z_P = 3;
+}
 }  // namespace rrobot
 
 #endif

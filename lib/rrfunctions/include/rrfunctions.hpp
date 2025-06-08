@@ -17,6 +17,9 @@ using execfunction = std::function<rrevent(rrevent&, int&)>;
 // instructs command loop to continue on with last action.
 #define RR_NN_ 4
 
+// limit float to two decimal places
+#define RR_F_2(X)  atof(String(atof(X.c_str()).c_str(),2))
+
 namespace rrobot {
 
 namespace rrfunctions {
