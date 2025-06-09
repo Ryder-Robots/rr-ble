@@ -20,7 +20,7 @@ rrevent rrfunctions::none_r(rrevent e, int& s) {
     return rrevent(MSP_NONE);
 }
 
-rrevent rrfunctions::sonar_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
+rrevent rrfunctions::sonar_r(rrevent e, int& s) { return rrevent(MSP_NONE, 2, rrerror::err_noimp); }
 
 /**
  * @brief Handles the accelometer sensor event for the robot.
@@ -38,11 +38,11 @@ rrevent rrfunctions::sonar_r(rrevent e, int& s) { return rrevent(MSP_NONE); }
 rrevent rrfunctions::sen_acc_r(rrevent e, int& s) {
     float x = 0, y = 0, z = 0;
     if (!IMU.accelerationAvailable()) {
-        return rrevent(MSP_NONE);
+        return rrevent(MSP_NONE, 2, rrerror::err_noimu);
     }
     IMU.readAcceleration(x, y, z);
     String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
-    rrevent r = rrevent(POS(MSP_SENSOR_ACC_P), 4, data);
+    rrevent r = rrevent(RR_COMMANDS[MSP_SENSOR_ACC_P], 4, data);
     return r;
 }
 
@@ -62,11 +62,11 @@ rrevent rrfunctions::sen_acc_r(rrevent e, int& s) {
 rrevent rrfunctions::sen_gyro_r(rrevent e, int& s) {
     float x = 0, y = 0, z = 0;
     if (!IMU.gyroscopeAvailable()) {
-        return rrevent(MSP_NONE);
+        return rrevent(MSP_NONE, 2, rrerror::err_noimu);
     }
     IMU.readGyroscope(x, y, z);
     String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
-    rrevent r = rrevent(POS(MSP_SENSOR_GYRO_P), 4, data);
+    rrevent r = rrevent(RR_COMMANDS[MSP_SENSOR_GYRO_P], 4, data);
     return r;
 }
 
@@ -86,11 +86,11 @@ rrevent rrfunctions::sen_gyro_r(rrevent e, int& s) {
 rrevent rrfunctions::sen_mag_r(rrevent e, int& s) {
     float x = 0, y = 0, z = 0;
     if (!IMU.magneticFieldAvailable()) {
-        return rrevent(MSP_NONE);
+        return rrevent(MSP_NONE, 2, rrerror::err_noimu);
     }
     IMU.readMagneticField(x, y, z);
     String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
-    rrevent r = rrevent(POS(MSP_SENSOR_MAG_P), 4, data);
+    rrevent r = rrevent(RR_COMMANDS[MSP_SENSOR_MAG_P], 4, data);
     return r;
 }
 
@@ -117,7 +117,7 @@ rrevent rrfunctions::stop_r(rrevent e, int& s) {
     digitalWrite(rrhbridge_map::_IN2, LOW);
     digitalWrite(rrhbridge_map::_IN3, LOW);
     digitalWrite(rrhbridge_map::_IN4, LOW);
-    return rrevent(POS(MSP_STOP_P));
+    return rrevent(e.get_cmd());
 }
 
 /**

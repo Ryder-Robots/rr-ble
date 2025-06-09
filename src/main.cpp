@@ -11,7 +11,6 @@ mbed::Ticker ticker;
 
 // TODO: add timer to here, that also includes movement commands for callback
 void setup() {
-
     // Initlilize USB first!!!!
     Serial.begin(rserial::_BOARDRATE);
 
@@ -27,7 +26,8 @@ void setup() {
         Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_)));
 
         // hard block here.
-        while(1){}        
+        while (1) {
+        }
     }
 
     //TODO need to initilize sonar here
@@ -42,16 +42,15 @@ void loop() {
     // put your main code here, to run repeatedly:
     if (!Serial.available()) {
         rrevent e = rrevent(MSP_NONE);
-        Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_)));
         return;
     }
     char buf[BUFSIZ];
     size_t sz = Serial.readBytesUntil(_TERM_CHAR, buf, BUFSIZ);
 
     // check last char is _TERM_CHAR
-    if (sz > 0 && buf[sz - 1] != _TERM_CHAR) {
-        rrevent e = rrevent(MSP_NONE);
-        sz = Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_)));
+    if (sz == 0) {
+        rrevent e = rrevent(MSP_NONE, 2, rrerror::err_term);
+        sz = Serial.print(serde::serialize(e));
         return;
     }
 

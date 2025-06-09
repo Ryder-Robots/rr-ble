@@ -5,6 +5,7 @@
 #include <rrblemappings.hpp>
 #include <rrevent.hpp>
 #include <rrutil.hpp>
+#include <rrerror.hpp>
 #include "Arduino_BMI270_BMM150.h"
 
 using namespace rrobot;

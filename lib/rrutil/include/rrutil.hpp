@@ -3,10 +3,6 @@
 
 #include <Arduino.h>
 
-#ifdef MBED=1
-#include <mbed.h>
-#endif
-
 /**
  * @file rrutil.hpp
  * @brief Utility functions for the rrobot project.
