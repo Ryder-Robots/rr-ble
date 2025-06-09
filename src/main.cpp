@@ -5,6 +5,10 @@ using namespace rrobot;
 // contains current state of robot during movements
 int cstate_ = RR_ST_;
 
+#ifdef MBED=1
+mbed::Ticker ticker;
+#endif
+
 // TODO: add timer to here, that also includes movement commands for callback
 void setup() {
 
@@ -27,6 +31,11 @@ void setup() {
     }
 
     //TODO need to initilize sonar here
+
+    // set up ticker. each epoch is around 0.5 seconds until wheel encoding can be created.
+    #ifdef MBED=1
+    ticker.attach(rrfunctions::move_t, 0.5s);
+    #endif
 }
 
 void loop() {
