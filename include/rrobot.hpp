@@ -5,6 +5,7 @@
 #include <rrevent.hpp>
 #include <serde.hpp>
 #include <rrfunctions.hpp>
+#include <rrerror.hpp>
 
 /**
  * @brief header file provided to allow includes of all headers
