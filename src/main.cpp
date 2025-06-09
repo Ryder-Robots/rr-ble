@@ -33,7 +33,6 @@ void loop() {
     // put your main code here, to run repeatedly:
     if (!Serial.available()) {
         rrevent e = rrevent(MSP_NONE);
-        Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_)));
         return;
     }
     char buf[BUFSIZ];
