@@ -14,6 +14,10 @@
 
 #include <Arduino.h>
 
+#define RR_ST_ 220
+#define RR_MV_ 221
+#define RR_RT_ 223
+
 namespace rrobot {
 
 /**

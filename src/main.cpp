@@ -3,7 +3,7 @@
 using namespace rrobot;
 
 // contains current state of robot during movements
-int cstate_ = RR_ST_;
+rrstate cstate_;
 
 // TODO: add timer to here, that also includes movement commands for callback
 void setup() {
