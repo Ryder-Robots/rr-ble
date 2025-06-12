@@ -22,13 +22,15 @@ namespace rrobot {
  * Each element in the array corresponds to a specific command, with the index
  * representing the command's position and the value representing its unique identifier.
  * The commands include:
+ *   -  0:   MSP_NONE
  *   - 58:   MSP_SONAR_ALTITUDE
  *   - 216:  MSP_SENSOR_ACC
  *   - 217:  MSP_SENSOR_GYRO
  *   - 218:  MSP_SENSOR_MAG
+ *   - 221:  MSP_MOVE
  *   - 223:  MSP_ROTATE
  *   - 220:  MSP_STOP
- *   - 221:  MSP_MOVE
+
  *
  * These identifiers are used for communication and control within the rrobot system.
  */
@@ -52,7 +54,7 @@ const int MSP_STOP_P = 5;
 const int MSP_MOVE_P = 6;
 const int MSP_ROTATE_P = 7;
 
-const int RR_CMDSZ = (sizeof(RR_COMMANDS) / sizeof(int));
+const int RR_CMDSZ = 7;
 const size_t RR_MX_E_SZ = 100;
 const char _TERM_CHAR = 0x1E;
 const char _DELIMETER = 0x3B;

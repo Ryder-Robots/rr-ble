@@ -29,7 +29,7 @@ rrevent serde::deserialize(const String in) {
 
 const String serde::serialize(rrevent out) {
     String dataj = "";
-    for (int i = 0; i < out.get_sz(); i++) {
+    for (size_t i = 0; i < out.get_sz(); i++) {
         dataj += out.get_data(i) + _DELIMETER;
     }
 

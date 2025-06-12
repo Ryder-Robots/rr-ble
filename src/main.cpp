@@ -46,7 +46,7 @@ void loop() {
     }
 
     // convert termination character to nullptr
-    buf[sz - 1] = '\0';
+    buf[sz] = '\0';
     String s(buf);
     rrevent e = serde::deserialize(s);
     sz = Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_)));

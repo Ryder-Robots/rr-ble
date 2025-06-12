@@ -12,8 +12,10 @@
 #ifndef RRBLEMAPPING_HPP
 #define RRBLEMAPPING_HPP
 
+#include <Arduino.h>
 
 namespace rrobot {
+
 /**
  * @headerfile rrhbridge_map
  * @brief Defines constant mappings for digital IO ports used to control an H-bridge motor driver.
@@ -31,14 +33,14 @@ namespace rrobot {
  * and maintainability when interfacing with the H-bridge.
  */    
 namespace rrhbridge_map {
-    const int _IN1 = 5;
-    const int _IN2 = 6;
-    const int _IN3 = 2;
-    const int _IN4 = 3;
-    const int _ENA = 7;
-    const int _ENB = 4;
+    const int _IN1 = D5;
+    const int _IN2 = D6;
+    const int _IN3 = D2;
+    const int _IN4 = D3;
+    const int _ENA = D7;
+    const int _ENB = D4;
 
-    const int _PWM_VALUE = 255/2;
+    const int _PWM_VALUE = 255;
 }
 
 namespace rserial {

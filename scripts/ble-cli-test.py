@@ -14,6 +14,12 @@ try:
         response = ser.read(100)
         print(f"Received: {response.decode('utf-8', errors='ignore')}")
 
+
+    # command_str = "217;0;0;0;\x1E"
+    # ser.write(command_str.encode('utf-8'))
+    # response = ser.read(100)
+    # print(f"Received: {response.decode('utf-8', errors='ignore')}")
+
     ser.close()
 except Exception as e:
     print(f"Error: {e}")

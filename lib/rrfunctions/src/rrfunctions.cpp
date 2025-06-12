@@ -106,18 +106,11 @@ rrevent rrfunctions::sen_mag_r(rrevent e, int& s) {
  * @return rrevent An event indicating a move should be performed (MSP_MOVE_P).
  */
 rrevent rrfunctions::stop_r(rrevent e, int& s) {
-    s = RR_ST_;
-    if (s != RR_ST_) {
-        s = RR_ST_;
+    if (s == RR_ST_) {
+        return e;
     }
-    // place motor in stop state after action completed.
-    analogWrite(rrhbridge_map::_ENA, 0);
-    analogWrite(rrhbridge_map::_ENB, 0);
-    digitalWrite(rrhbridge_map::_IN1, LOW);
-    digitalWrite(rrhbridge_map::_IN2, LOW);
-    digitalWrite(rrhbridge_map::_IN3, LOW);
-    digitalWrite(rrhbridge_map::_IN4, LOW);
-    return rrevent(e.get_cmd());
+    s = RR_ST_;
+    return rrfunctions::move_t(MSP_STOP_P, 0, 0, LOW, LOW, LOW, LOW);
 }
 
 /**
@@ -134,7 +127,27 @@ rrevent rrfunctions::stop_r(rrevent e, int& s) {
 rrevent rrfunctions::move_r(const rrevent e, int& s) {
     // load a trigger for move.
     s = RR_MV_;
-    rrevent out = rrevent(RR_COMMANDS[MSP_MOVE_P]);
+    return rrfunctions::move_t(MSP_MOVE_P, rrhbridge_map::_PWM_VALUE, rrhbridge_map::_PWM_VALUE, HIGH, LOW, HIGH, LOW);
+}
+
+rrevent rrfunctions::move_t(int pos, int ena, int enb, int in1, int in2, int in3, int in4) {
+    analogWrite(rrhbridge_map::_ENA, ena);
+    analogWrite(rrhbridge_map::_ENB, enb);
+    digitalWrite(rrhbridge_map::_IN1, in1);
+    digitalWrite(rrhbridge_map::_IN2, in2);
+    digitalWrite(rrhbridge_map::_IN3, in3);
+    digitalWrite(rrhbridge_map::_IN4, in4);
+
+    String vout[] = {
+        "ena:" + String(ena), 
+        "enb:" + String(enb), 
+        "in1:" + String(in1),
+        "in2:" + String(in2), 
+        "in3:" + String(in3), 
+        "in4:" + String(in4),
+    };
+
+    rrevent out = rrevent(RR_COMMANDS[pos], 6, vout);
     return out;
 }
 
@@ -152,6 +165,9 @@ rrevent rrfunctions::move_r(const rrevent e, int& s) {
  */
 rrevent rrfunctions::rotate_r(rrevent e, int& s) {
     stop_r(POS(MSP_STOP_P), s);
+
+    // heading_rad = math.atan2(y, x)
+    // heading_deg = math.degrees(heading_rad)
 
     // check that inputs are available for attempting a rotation.
     if (e.get_sz() < 4) {
@@ -209,27 +225,4 @@ rrevent rrfunctions::rotate_r(rrevent e, int& s) {
     // using event rotate robot to values of mag.
     stop_r(POS(MSP_STOP_P), s);
     return rrevent(POS(MSP_ROTATE_P));
-}
-
-/**
- * @brief Executes a forward movement operation for the robot.
- *
- * This function sets the robot's state to indicate a move operation and configures
- * the H-bridge motor driver to drive both motors forward. It sets the appropriate
- * PWM values and digital signals to the motor control pins to achieve forward motion.
- *
- * @param s Reference to the state variable. If not already set to the move state (RR_MV_),
- *          it will be updated accordingly.
- */
-// forward is 0b1010
-void move_t(int& s) {
-    if (s != RR_MV_) {
-        s = RR_MV_;
-    }
-    analogWrite(rrhbridge_map::_ENA, rrhbridge_map::_PWM_VALUE);
-    analogWrite(rrhbridge_map::_ENB, rrhbridge_map::_PWM_VALUE);
-    digitalWrite(rrhbridge_map::_IN1, HIGH);
-    digitalWrite(rrhbridge_map::_IN2, LOW);
-    digitalWrite(rrhbridge_map::_IN3, HIGH);
-    digitalWrite(rrhbridge_map::_IN4, LOW);
 }

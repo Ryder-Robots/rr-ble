@@ -16,7 +16,7 @@ class rrevent {
      * @param mcount The number of elements in the data array to copy.
      */
     rrevent(const int cmd, const size_t sz, const String data[]) : _cmd(cmd), _sz(sz) {
-        for (int i = 0; i < sz; i++) {
+        for (size_t i = 0; i < sz; i++) {
             _data[i] = String(data[i].c_str());
         }
     }
