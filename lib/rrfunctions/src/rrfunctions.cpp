@@ -171,6 +171,4 @@ void rrfunctions::move_t(rrstate& s, int ena, int enb, int in1, int in2, int in3
  * @param s Reference to the state variable, which should be updated for rotation.
  * @return rrevent An event indicating the result of the rotation handling (currently MSP_NONE).
  */
-rrevent rrfunctions::rotate_r(rrevent e, rrstate& s) {
-    return e;
-}
+rrevent rrfunctions::rotate_r(rrevent e, rrstate& s) { return rrevent(MSP_NONE, 2, rrerror::err_noimp); }

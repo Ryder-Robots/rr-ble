@@ -1,6 +1,7 @@
 #ifndef RREVENT_HPP
 #define RREVENT_HPP
 
+#include <rrblemappings.hpp>
 #include <rrutil.hpp>
 
 namespace rrobot {
