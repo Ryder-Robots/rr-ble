@@ -17,7 +17,7 @@
 #define RLEN(X) (sizeof(X) / sizeof(X[0]))
 #define POS(X) binary_search(RR_COMMANDS, RR_CMDSZ, X)
 
-const int RR_CMDSZ = 7;
+const int RR_CMDSZ = 8;
 const size_t RR_MX_E_SZ = 100;
 const char _TERM_CHAR = 0x1E;
 const char _DELIMETER = 0x3B;
@@ -25,6 +25,31 @@ const char _DELIMETER = 0x3B;
 #define RR_ST_ 220
 #define RR_MV_ 221
 #define RR_RT_ 223
+
+/*
+ * Precompiler helpers for when Digitial variable are not defined.
+ */
+#ifndef D1
+#define D1 1
+#endif
+#ifndef D2
+#define D2 2
+#endif
+#ifndef D3
+#define D3 3
+#endif
+#ifndef D4
+#define D4 4
+#endif
+#ifndef D5
+#define D5 5
+#endif
+#ifndef D6
+#define D6 6
+#endif
+#ifndef D7
+#define D7 7
+#endif
 
 namespace rrobot {
 
@@ -39,10 +64,9 @@ namespace rrobot {
  *   - 216:  MSP_SENSOR_ACC
  *   - 217:  MSP_SENSOR_GYRO
  *   - 218:  MSP_SENSOR_MAG
+ *   - 220:  MSP_STOP
  *   - 221:  MSP_MOVE
  *   - 223:  MSP_ROTATE
- *   - 220:  MSP_STOP
-
  *
  * These identifiers are used for communication and control within the rrobot system.
  */
@@ -66,7 +90,6 @@ const int MSP_STOP_P = 5;
 const int MSP_MOVE_P = 6;
 const int MSP_ROTATE_P = 7;
 
-
 /**
  * @headerfile rrhbridge_map
  * @brief Defines constant mappings for digital IO ports used to control an H-bridge motor driver.
@@ -82,28 +105,37 @@ const int MSP_ROTATE_P = 7;
  *
  * Use these constants to abstract hardware pin assignments in your code, improving readability
  * and maintainability when interfacing with the H-bridge.
- */    
+ */
 namespace rrhbridge_map {
-    const int _IN1 = D5;
-    const int _IN2 = D6;
-    const int _IN3 = D2;
-    const int _IN4 = D3;
-    const int _ENA = D7;
-    const int _ENB = D4;
+const int _IN1 = D5;
+const int _IN2 = D6;
+const int _IN3 = D2;
+const int _IN4 = D3;
+const int _ENA = D7;
+const int _ENB = D4;
 
-    const int _PWM_VALUE = 255;
-}
+const int _PWM_VALUE = 255;
+}  // namespace rrhbridge_map
 
 namespace rserial {
-    const int _BOARDRATE = 9600;
+const int _BOARDRATE = 9600;
 }
 
 namespace r_imu_po {
-    const int _AVAIL_P = 0;
-    const int _X_P = 1;
-    const int _Y_P = 2;
-    const int _Z_P = 3;
-}
+const int _AVAIL_P = 0;
+const int _X_P = 1;
+const int _Y_P = 2;
+const int _Z_P = 3;
+
+const int _SENS_SZ = 4;
+}  // namespace r_imu_po
+
+namespace r_imu_sens {
+const int _GYRO = 0;
+const int _MAG = 1;
+const int _ACC = 2;
+const int _SENS_SZ = 3;
+}  // namespace r_imu_sens
 }  // namespace rrobot
 
 #endif

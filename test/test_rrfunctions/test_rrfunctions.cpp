@@ -7,28 +7,31 @@ using namespace rrobot;
 using namespace fakeit;
 
 void test_moveDoesSetState(void) {
-    int _state = RR_ST_;
+    rrstate _state;
+    _state.set_cstate(RR_ST_);
     rrfunctions::move_r(rrevent(RR_COMMANDS[MSP_MOVE_P]), _state);
-    TEST_ASSERT_EQUAL_INT(RR_MV_, _state);
+    TEST_ASSERT_EQUAL_INT(RR_MV_, _state.get_cstate());
 }
 
 void test_noneDoesSetState(void) {
     When(Method(ArduinoFake(), analogWrite)).AlwaysReturn();
     When(Method(ArduinoFake(), digitalWrite)).AlwaysReturn();
 
-    int _state = RR_ST_;
+    rrstate _state;
+    _state.set_cstate(RR_MV_);
     rrfunctions::none_r(rrevent(RR_COMMANDS[MSP_NONE]), _state);
-    TEST_ASSERT_EQUAL_INT(RR_ST_, _state);
+    TEST_ASSERT_EQUAL_INT(RR_ST_, _state.get_cstate());
 
     Verify(Method(ArduinoFake(), analogWrite).Using(rrhbridge_map::_ENA, 0)).Once();
     Verify(Method(ArduinoFake(), analogWrite).Using(rrhbridge_map::_ENB, 0)).Once();
 }
 
 void test_moveUsingArrayCall(void) {
-    int _state = RR_ST_;
+    rrstate _state;
+    _state.set_cstate(RR_ST_);
     rrevent e = rrevent(RR_COMMANDS[MSP_MOVE_P]);
     rrfunctions::_functions[POS(e.get_cmd())](e, _state);
-    TEST_ASSERT_EQUAL_INT(RR_MV_, _state);
+    TEST_ASSERT_EQUAL_INT(RR_MV_, _state.get_cstate());
 }
 
 int runUnityTests(void) {

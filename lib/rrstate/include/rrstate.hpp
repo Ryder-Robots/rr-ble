@@ -37,6 +37,20 @@ class rrstate {
 
     int get_in4() { return _in4; }
 
+    void set_sens(int sens, float avail, float x, float y, float z) {
+        _sens[sens][r_imu_po::_AVAIL_P] = avail;
+        _sens[sens][r_imu_po::_X_P] = x;
+        _sens[sens][r_imu_po::_Y_P] = y;
+        _sens[sens][r_imu_po::_Z_P] = z;
+    }
+
+    void get_sens(int sens, float& avail, float& x, float& y, float& z) {
+        avail = _sens[sens][r_imu_po::_AVAIL_P];
+        x = _sens[sens][r_imu_po::_X_P];
+        y = _sens[sens][r_imu_po::_Y_P];
+        z = _sens[sens][r_imu_po::_Z_P];
+    }
+
    private:
     int _cstate = RR_ST_;
     int _ena = 0;
@@ -45,6 +59,8 @@ class rrstate {
     int _in2 = 0;
     int _in3 = 0;
     int _in4 = 0;
+
+    float _sens[r_imu_sens::_SENS_SZ][r_imu_po::_SENS_SZ];
 };
 }  // namespace rrobot
 

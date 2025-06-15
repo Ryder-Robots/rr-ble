@@ -1,6 +1,6 @@
 #include <ArduinoFake.h>
 #include <unity.h>
-
+#include <rrblemappings.hpp>
 #include <rrutil.hpp>
 
 using namespace rrobot;

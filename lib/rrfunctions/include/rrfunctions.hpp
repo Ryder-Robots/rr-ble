@@ -21,6 +21,7 @@ using execfunction = std::function<rrevent(rrevent&, rrstate&)>;
 #define MIN_UT -400
 #define MAX_UT 400
 #define _UT_SCALED(X) X / MAX_UT
+#define DG(R) R * (180/PI) 
 
 namespace rrobot {
 
@@ -36,8 +37,17 @@ rrevent stop_r(rrevent e, rrstate& s);
 rrevent move_r(rrevent e, rrstate& s);
 rrevent rotate_r(rrevent e, rrstate& s);
 
-void move_t(rrstate& s, int ena, int enb, int in1, int in2, int in3, int in4);
+void move_t(rrstate& s);
 
+/**
+ * @brief get heading in degrees
+ */
+float heading_d(float x, float y, float z);
+
+/**
+ * @brief get heading in degrees from gyro scope.
+ */
+float heading_d_gyro(rrstate& s);
 
 /*
  *   - 58:   MSP_SONAR_ALTITUDE
