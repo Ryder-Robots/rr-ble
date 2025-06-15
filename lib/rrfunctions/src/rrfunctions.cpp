@@ -168,9 +168,9 @@ void rrfunctions::move_t(rrstate& s) {
     digitalWrite(rrhbridge_map::_IN4, s.get_in4());
 }
 
-float rrfunctions::heading_d(float x, float y, float z) {
-    float r = atan2(y, x);
-    return DG(r);
+int rrfunctions::heading_d(float x, float y, float z) {
+    int d = DG(atan2(y, x));
+    return d;
 }
 
 float rrfunctions::heading_d_gyro(rrstate& s) { return 0; }

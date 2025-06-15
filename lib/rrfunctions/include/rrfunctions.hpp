@@ -17,9 +17,6 @@ using execfunction = std::function<rrevent(rrevent&, rrstate&)>;
 
 // limit float to two decimal places
 #define RR_F_2(X)  atof(String(atof(X.c_str()).c_str(),2))
-
-#define MIN_UT -400
-#define MAX_UT 400
 #define _UT_SCALED(X) X / MAX_UT
 #define DG(R) R * (180/PI) 
 
@@ -40,9 +37,19 @@ rrevent rotate_r(rrevent e, rrstate& s);
 void move_t(rrstate& s);
 
 /**
- * @brief get heading in degrees
+ * @brief get heading in degrees. Headings are mapped according to uTs, where magnometer will return the gravitation
+ * force (approximately 50uT at sea level). The formula will convert x, y vector to degrees,  which can be approximated
+ * as:
+ * 
+ *  || Vector    || Othagonal  || Degrees   || Radians
+ *  +------------+-------------+------------+--------------
+ *  | <0,1>      | east        | 90         | 1.5708
+ *  | <0,-1>     | west        | -90        | 4.7124
+ *  | <1,0>      | north       | 0          | 0.0
+ *  | <1,1>      | north east  | 45         | 0.7071
+ *  | <1,-1>     | north west. | -45        | 0
  */
-float heading_d(float x, float y, float z);
+int heading_d(float x, float y, float z);
 
 /**
  * @brief get heading in degrees from gyro scope.

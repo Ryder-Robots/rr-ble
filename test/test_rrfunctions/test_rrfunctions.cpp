@@ -46,11 +46,21 @@ void test_moveUsingArrayCall(void) {
     TEST_ASSERT_EQUAL_INT(RR_MV_, _state.get_cstate());
 }
 
+void test_heading_d(void) {
+
+
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(0, 1, 0) == 90));
+
+    // degrees = rrfunctions::heading_d(0, 1, 0);
+    // TEST_ASSERT_EQUAL(true, (degrees == 0));
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_moveDoesSetState);
     RUN_TEST(test_noneDoesSetState);
     RUN_TEST(test_moveUsingArrayCall);
+    RUN_TEST(test_heading_d);
     return UNITY_END();
 }
 

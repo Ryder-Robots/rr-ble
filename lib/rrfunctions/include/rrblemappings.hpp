@@ -16,6 +16,8 @@
 
 #define RLEN(X) (sizeof(X) / sizeof(X[0]))
 #define POS(X) binary_search(RR_COMMANDS, RR_CMDSZ, X)
+#define MIN_UT -400
+#define MAX_UT 400
 
 const int RR_CMDSZ = 8;
 const size_t RR_MX_E_SZ = 100;
