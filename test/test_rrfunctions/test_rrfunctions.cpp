@@ -11,6 +11,12 @@ void test_moveDoesSetState(void) {
     _state.set_cstate(RR_ST_);
     rrfunctions::move_r(rrevent(RR_COMMANDS[MSP_MOVE_P]), _state);
     TEST_ASSERT_EQUAL_INT(RR_MV_, _state.get_cstate());
+    TEST_ASSERT_EQUAL(rrhbridge_map::_PWM_VALUE, _state.get_ena());
+    TEST_ASSERT_EQUAL(rrhbridge_map::_PWM_VALUE, _state.get_enb());
+    TEST_ASSERT_EQUAL(HIGH, _state.get_in1());
+    TEST_ASSERT_EQUAL(LOW, _state.get_in2());
+    TEST_ASSERT_EQUAL(HIGH, _state.get_in3());
+    TEST_ASSERT_EQUAL(LOW, _state.get_in4());
 }
 
 void test_noneDoesSetState(void) {
@@ -21,6 +27,12 @@ void test_noneDoesSetState(void) {
     _state.set_cstate(RR_MV_);
     rrfunctions::none_r(rrevent(RR_COMMANDS[MSP_NONE]), _state);
     TEST_ASSERT_EQUAL_INT(RR_ST_, _state.get_cstate());
+    TEST_ASSERT_EQUAL(0, _state.get_ena());
+    TEST_ASSERT_EQUAL(0, _state.get_enb());
+    TEST_ASSERT_EQUAL(LOW, _state.get_in1());
+    TEST_ASSERT_EQUAL(LOW, _state.get_in2());
+    TEST_ASSERT_EQUAL(LOW, _state.get_in3());
+    TEST_ASSERT_EQUAL(LOW, _state.get_in4());
 
     Verify(Method(ArduinoFake(), analogWrite).Using(rrhbridge_map::_ENA, 0)).Once();
     Verify(Method(ArduinoFake(), analogWrite).Using(rrhbridge_map::_ENB, 0)).Once();
