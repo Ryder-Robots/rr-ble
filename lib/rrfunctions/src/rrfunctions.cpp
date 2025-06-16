@@ -1,4 +1,3 @@
-
 #include <rrfunctions.hpp>
 
 using namespace rrobot;
@@ -22,6 +21,59 @@ rrevent rrfunctions::none_r(rrevent e, rrstate& s) {
 
 rrevent rrfunctions::sonar_r(rrevent e, rrstate& s) { return rrevent(MSP_NONE, 2, rrerror::err_noimp); }
 
+bool rrfunctions::sen_acc_s(rrstate& s) {
+    float x = 0, y = 0, z = 0;
+    if (!IMU.accelerationAvailable()) {
+        return false;
+    }
+    IMU.readAcceleration(x, y, z);
+    s.set_sens(r_imu_sens::_ACC, true, x, y, z);
+    return true;
+}
+
+bool rrfunctions::sen_gyro_s(rrstate& s) {
+    float x = 0, y = 0, z = 0;
+    if (!IMU.gyroscopeAvailable()) {
+        return false;
+    }
+    IMU.readGyroscope(x, y, z);
+    s.set_sens(r_imu_sens::_GYRO, true, x, y, z);
+    return true;
+}
+
+bool rrfunctions::sen_mag_s(rrstate& s) {
+    float x = 0, y = 0, z = 0;
+    if (!IMU.magneticFieldAvailable()) {
+        return false;
+    }
+    IMU.readMagneticField(x, y, z);
+    s.set_sens(r_imu_sens::_MAG, true, x, y, z);
+    return true;
+}
+
+bool rrfunctions::move_s(rrstate& s) {
+    analogWrite(rrhbridge_map::_ENA, s.get_ena());
+    analogWrite(rrhbridge_map::_ENB, s.get_enb());
+    digitalWrite(rrhbridge_map::_IN1, s.get_in1());
+    digitalWrite(rrhbridge_map::_IN2, s.get_in2());
+    digitalWrite(rrhbridge_map::_IN3, s.get_in3());
+    digitalWrite(rrhbridge_map::_IN4, s.get_in4());
+    s.set_cstate(RR_MV_);
+    return true;
+}
+
+bool rrfunctions::stop_s(rrstate& s) {
+    s.set_ena(0);
+    s.set_enb(0);
+    s.set_in1(LOW);
+    s.set_in2(LOW);
+    s.set_in3(LOW);
+    s.set_in4(LOW);
+    move_s(s);
+    s.set_cstate(RR_ST_);
+    return true;
+}
+
 /**
  * @brief Handles the accelometer sensor event for the robot.
  *
@@ -36,12 +88,11 @@ rrevent rrfunctions::sonar_r(rrevent e, rrstate& s) { return rrevent(MSP_NONE, 2
  *                 or an event indicating no operation (MSP_NONE) if not available.
  */
 rrevent rrfunctions::sen_acc_r(rrevent e, rrstate& s) {
-    float x = 0, y = 0, z = 0;
-    if (!IMU.accelerationAvailable()) {
+    if (!sen_acc_s(s)) {
         return rrevent(MSP_NONE, 2, rrerror::err_noimu);
     }
-    IMU.readAcceleration(x, y, z);
-    s.set_sens(r_imu_sens::_ACC, IMU.accelerationAvailable(), x, y, z);
+    float a = 0, x = 0, y = 0, z = 0;
+    s.get_sens(r_imu_sens::_ACC, a, x, y, z);
     String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
     rrevent r = rrevent(RR_COMMANDS[MSP_SENSOR_ACC_P], 4, data);
     return r;
@@ -61,12 +112,11 @@ rrevent rrfunctions::sen_acc_r(rrevent e, rrstate& s) {
  *                 or an event indicating no operation (MSP_NONE) if not available.
  */
 rrevent rrfunctions::sen_gyro_r(rrevent e, rrstate& s) {
-    float x = 0, y = 0, z = 0;
-    if (!IMU.gyroscopeAvailable()) {
+    if (!sen_gyro_s(s)) {
         return rrevent(MSP_NONE, 2, rrerror::err_noimu);
     }
-    IMU.readGyroscope(x, y, z);
-    s.set_sens(r_imu_sens::_GYRO, IMU.gyroscopeAvailable(), x, y, z);
+    float a = 0, x = 0, y = 0, z = 0;
+    s.get_sens(r_imu_sens::_GYRO, a, x, y, z);
     String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
     rrevent r = rrevent(RR_COMMANDS[MSP_SENSOR_GYRO_P], 4, data);
     return r;
@@ -86,13 +136,11 @@ rrevent rrfunctions::sen_gyro_r(rrevent e, rrstate& s) {
  *                 or an event indicating no operation (MSP_NONE) if not available.
  */
 rrevent rrfunctions::sen_mag_r(rrevent e, rrstate& s) {
-    float x = 0, y = 0, z = 0;
-    if (!IMU.magneticFieldAvailable()) {
+    if (!sen_mag_s(s)) {
         return rrevent(MSP_NONE, 2, rrerror::err_noimu);
     }
-    IMU.readMagneticField(x, y, z);
-    s.set_sens(r_imu_sens::_MAG, IMU.magneticFieldAvailable(), x, y, z);
-    x = _UT_SCALED(x), y = _UT_SCALED(y), z = _UT_SCALED(z);
+    float a = 0, x = 0, y = 0, z = 0;
+    s.get_sens(r_imu_sens::_MAG, a, x, y, z);
     String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
     rrevent r = rrevent(RR_COMMANDS[MSP_SENSOR_MAG_P], 4, data);
     return r;
@@ -111,14 +159,7 @@ rrevent rrfunctions::sen_mag_r(rrevent e, rrstate& s) {
  */
 rrevent rrfunctions::stop_r(const rrevent e, rrstate& s) {
     if (s.get_cstate() != RR_ST_) {
-        s.set_cstate(RR_ST_);
-        s.set_ena(0);
-        s.set_enb(0);
-        s.set_in1(LOW);
-        s.set_in2(LOW);
-        s.set_in3(LOW);
-        s.set_in4(LOW);
-        rrfunctions::move_t(s);
+        stop_s(s);
     }
     String vout[] = {
         String(s.get_ena()), String(s.get_enb()), String(s.get_in1()),
@@ -155,17 +196,8 @@ rrevent rrfunctions::move_r(const rrevent e, rrstate& s) {
         String(s.get_ena()), String(s.get_enb()), String(s.get_in1()),
         String(s.get_in2()), String(s.get_in3()), String(s.get_in4()),
     };
-    rrevent out = rrevent(RR_COMMANDS[MSP_STOP_P], 6, vout);
+    rrevent out = rrevent(RR_COMMANDS[MSP_MOVE_P], 6, vout);
     return out;
-}
-
-void rrfunctions::move_t(rrstate& s) {
-    analogWrite(rrhbridge_map::_ENA, s.get_ena());
-    analogWrite(rrhbridge_map::_ENB, s.get_enb());
-    digitalWrite(rrhbridge_map::_IN1, s.get_in1());
-    digitalWrite(rrhbridge_map::_IN2, s.get_in2());
-    digitalWrite(rrhbridge_map::_IN3, s.get_in3());
-    digitalWrite(rrhbridge_map::_IN4, s.get_in4());
 }
 
 int rrfunctions::heading_d(float x, float y, float z) {
@@ -173,7 +205,11 @@ int rrfunctions::heading_d(float x, float y, float z) {
     return d;
 }
 
-float rrfunctions::heading_d_gyro(rrstate& s) { return 0; }
+float rrfunctions::heading_d_gyro(rrstate& s) {
+    float a = 0, x = 0, y = 0, z = 0;
+    s.get_sens(r_imu_sens::_MAG, a, x, y, z);
+    return heading_d(x, y, z);
+}
 
 /**
  * @brief Handles the rotation event for the robot.
@@ -188,32 +224,42 @@ float rrfunctions::heading_d_gyro(rrstate& s) { return 0; }
  * @return rrevent An event indicating the result of the rotation handling (currently MSP_NONE).
  */
 rrevent rrfunctions::rotate_r(rrevent e, rrstate& s) {
-    float avail, x, y, z;
-    s.get_sens(r_imu_sens::_GYRO, avail, x, y, z);
-    float heading = atan2(y, x),
-          new_heading = atan2(atof(e.get_data(r_imu_po::_Y_P).c_str()), atof(e.get_data(r_imu_po::_X_P).c_str())),
-          i1 = DG(heading), i2 = DG(new_heading);
-    if (heading == new_heading) {
-        String vout[] = {
-            String(s.get_ena()), String(s.get_enb()), String(s.get_in1()),
-            String(s.get_in2()), String(s.get_in3()), String(s.get_in4()),
-        };
-        return rrevent(MSP_ROTATE_P, 6, vout);
-    } else if (DG(heading) < DG(new_heading)) {
-        i1 = DG(new_heading), i2 = DG(heading);
+    sen_mag_s(s);
+    float heading = heading_d_gyro(s),
+          new_heading = heading_d(atof(e.get_data(r_imu_po::_X_P).c_str()), atof(e.get_data(r_imu_po::_Y_P).c_str()),
+                                  atof(e.get_data(r_imu_po::_Z_P).c_str())),
+          i1 = heading, i2 = new_heading;
+
+    if (heading < new_heading) {
+        i1 = new_heading, i2 = heading;
         s.set_in1(LOW);
         s.set_in2(HIGH);
         s.set_in3(HIGH);
         s.set_in4(LOW);
-    } else {
+    } else if (heading > new_heading) {
         s.set_in1(HIGH);
         s.set_in2(LOW);
         s.set_in3(LOW);
         s.set_in4(HIGH);
     }
-    rrfunctions::move_t(s);
+
     while (i1 > i2) {
+        move_s(s);
         delay(50);
+        sen_mag_s(s);
+        heading = heading_d_gyro(s);
+
+        if (heading < new_heading) {
+            i1 = new_heading, i2 = heading;
+        } else {
+            i2 = new_heading, i1 = heading;
+        }
     }
-    return rrevent(MSP_NONE, 2, rrerror::err_noimp);
+    String vout[] = {
+        String(s.get_ena()), String(s.get_enb()), String(s.get_in1()),
+        String(s.get_in2()), String(s.get_in3()), String(s.get_in4()),
+    };
+    stop_s(s);
+    s.set_cstate(RR_RT_);
+    return rrevent(MSP_ROTATE_P, 6, vout);
 }

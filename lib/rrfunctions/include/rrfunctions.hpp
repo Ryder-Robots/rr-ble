@@ -2,11 +2,12 @@
 #define RRFUNCTIONS_HPP
 
 #include <functional>
-#include <rrstate.hpp>
 #include <rrblemappings.hpp>
-#include <rrevent.hpp>
-#include <rrutil.hpp>
 #include <rrerror.hpp>
+#include <rrevent.hpp>
+#include <rrstate.hpp>
+#include <rrutil.hpp>
+
 #include "Arduino_BMI270_BMM150.h"
 
 using namespace rrobot;
@@ -16,13 +17,19 @@ using execfunction = std::function<rrevent(rrevent&, rrstate&)>;
 #define RR_NN_ 4
 
 // limit float to two decimal places
-#define RR_F_2(X)  atof(String(atof(X.c_str()).c_str(),2))
+#define RR_F_2(X) atof(String(atof(X.c_str()).c_str(), 2))
 #define _UT_SCALED(X) X / MAX_UT
-#define DG(R) R * (180/PI) 
+#define DG(R) R * (180 / PI)
 
 namespace rrobot {
+namespace rrfunctions {
 
-namespace rrfunctions { 
+// state only functions for sensors
+bool sen_acc_s(rrstate& s);
+bool sen_gyro_s(rrstate& s);
+bool sen_mag_s(rrstate& s);
+bool move_s(rrstate& s);
+bool stop_s(rrstate& s);
 
 // list of events that can be triggered
 rrevent none_r(rrevent e, rrstate& s);
@@ -34,13 +41,11 @@ rrevent stop_r(rrevent e, rrstate& s);
 rrevent move_r(rrevent e, rrstate& s);
 rrevent rotate_r(rrevent e, rrstate& s);
 
-void move_t(rrstate& s);
-
 /**
  * @brief get heading in degrees. Headings are mapped according to uTs, where magnometer will return the gravitation
  * force (approximately 50uT at sea level). The formula will convert x, y vector to degrees,  which can be approximated
  * as:
- * 
+ *
  *  || Vector    || Othagonal  || Degrees   || Radians
  *  +------------+-------------+------------+--------------
  *  | <0,1>      | east        | 90         | 1.5708
@@ -49,7 +54,7 @@ void move_t(rrstate& s);
  *  | <-1,0>     | move south. | 180        | 3.1416
  *  | <1,1>      | north east  | 45         | 0.7071
  *  | <1,-1>     | north west. | -45        | 0
- *  | <-1,1>     | south east. | 135        | 
+ *  | <-1,1>     | south east. | 135        |
  *  | <-1,-1>    | south west  | -135       |
  */
 int heading_d(float x, float y, float z);
@@ -70,14 +75,14 @@ float heading_d_gyro(rrstate& s);
  */
 // registered functions that will be executed in main loop.
 const execfunction _functions[] = {
-    none_r,     // 0
-    sonar_r,    // 1 
-    sen_acc_r,  // 2 
-    sen_gyro_r, // 3 
-    sen_mag_r,  // 4
-    stop_r,     // 5 
-    move_r,     // 6
-    rotate_r,   // 7
+    none_r,      // 0
+    sonar_r,     // 1
+    sen_acc_r,   // 2
+    sen_gyro_r,  // 3
+    sen_mag_r,   // 4
+    stop_r,      // 5
+    move_r,      // 6
+    rotate_r,    // 7
 };
 }  // namespace rrfunctions
 

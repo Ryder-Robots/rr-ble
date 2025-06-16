@@ -47,15 +47,23 @@ void test_moveUsingArrayCall(void) {
 }
 
 void test_heading_d(void) {
-    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(0, 1, 0) == 90));   // East
-    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(0, -1, 0) == -90)); // West
-    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(1, 0, 0) == 0));    // North
-    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, 0, 0) == 180)); // South
-    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(1, 1, 0) == 45));   // North East
-    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(1, -1, 0) == -45)); // North West
-    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, 1, 0) == 135)); // South East
-    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, -1, 0) == -135)); // South West
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(0, 1, 0) == 90));      // East
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(0, -1, 0) == -90));    // West
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(1, 0, 0) == 0));       // North
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, 0, 0) == 180));    // South
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(1, 1, 0) == 45));      // North East
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(1, -1, 0) == -45));    // North West
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, 1, 0) == 135));    // South East
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, -1, 0) == -135));  // South West
+}
 
+void test_heading_d_gyro(void) {
+    rrstate _state;
+    _state.set_sens(r_imu_sens::_MAG, true, 0, 1, 0);
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d_gyro(_state) == 90));  // East
+
+    _state.set_sens(r_imu_sens::_MAG, true, -1, 11, 0);
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, -1, 0) == -135));  // South West
 }
 
 int runUnityTests(void) {
@@ -64,6 +72,7 @@ int runUnityTests(void) {
     RUN_TEST(test_noneDoesSetState);
     RUN_TEST(test_moveUsingArrayCall);
     RUN_TEST(test_heading_d);
+    RUN_TEST(test_heading_d_gyro);
     return UNITY_END();
 }
 
