@@ -47,12 +47,15 @@ void test_moveUsingArrayCall(void) {
 }
 
 void test_heading_d(void) {
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(0, 1, 0) == 90));   // East
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(0, -1, 0) == -90)); // West
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(1, 0, 0) == 0));    // North
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, 0, 0) == 180)); // South
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(1, 1, 0) == 45));   // North East
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(1, -1, 0) == -45)); // North West
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, 1, 0) == 135)); // South East
+    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, -1, 0) == -135)); // South West
 
-
-    TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(0, 1, 0) == 90));
-
-    // degrees = rrfunctions::heading_d(0, 1, 0);
-    // TEST_ASSERT_EQUAL(true, (degrees == 0));
 }
 
 int runUnityTests(void) {

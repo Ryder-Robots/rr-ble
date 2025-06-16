@@ -46,8 +46,11 @@ void move_t(rrstate& s);
  *  | <0,1>      | east        | 90         | 1.5708
  *  | <0,-1>     | west        | -90        | 4.7124
  *  | <1,0>      | north       | 0          | 0.0
+ *  | <-1,0>     | move south. | 180        | 3.1416
  *  | <1,1>      | north east  | 45         | 0.7071
  *  | <1,-1>     | north west. | -45        | 0
+ *  | <-1,1>     | south east. | 135        | 
+ *  | <-1,-1>    | south west  | -135       |
  */
 int heading_d(float x, float y, float z);
 
