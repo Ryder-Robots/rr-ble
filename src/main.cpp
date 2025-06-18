@@ -27,7 +27,7 @@ void setup() {
         }
     }
 
-    //TODO need to initilize sonar here
+    // TODO need to initilize sonar here
 }
 
 void loop() {
