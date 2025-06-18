@@ -8,17 +8,22 @@ using namespace fakeit;
 
 class MockSensors : public RrSensors {
    public:
-    int begin() override { return 1; }
-    void end() override { return; }
+    virtual int begin() override { return 1; }
+    virtual void end() override { return; }
 
-    int readAcceleration(float& x, float& y, float& z) override { return 1; }
-    int accelerationAvailable() override { return 1; }
+    virtual int readAcceleration(float& x, float& y, float& z) override {
+        x = 1;
+        y = 1;
+        z = 0;
+        return 1;
+    }
+    virtual int accelerationAvailable() override { return 1; }
 
-    int readGyroscope(float& x, float& y, float& z) override { return 1; }
-    int gyroscopeAvailable() override { return 1; }
+    virtual int readGyroscope(float& x, float& y, float& z) override { return 1; }
+    virtual int gyroscopeAvailable() override { return 1; }
 
-    int readMagneticField(float& x, float& y, float& z) override { return 1; }
-    int magneticFieldAvailable() override { return 1; }
+    virtual int readMagneticField(float& x, float& y, float& z) override { return 1; }
+    virtual int magneticFieldAvailable() override { return 1; }
 };
 
 void setUp(void) {
@@ -89,6 +94,20 @@ void test_heading_d_gyro(void) {
     TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d(-1, -1, 0) == -135));  // South West
 }
 
+void test_sen_acc_s(void) {
+    rrstate _state;
+    MockSensors _ble;
+    _state.set_sens(r_imu_sens::_ACC, true, 0, 0, 0);
+    rrfunctions::sen_acc_s(_state, _ble);
+    float a = 0, x = 0, y = 0, z = 0;
+    _state.get_sens(r_imu_sens::_ACC, a, x, y, z);
+
+    TEST_ASSERT_EQUAL(1, a);
+    TEST_ASSERT_EQUAL(1, x);
+    TEST_ASSERT_EQUAL(1, y);
+    TEST_ASSERT_EQUAL(0, z);
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_moveDoesSetState);
@@ -96,6 +115,7 @@ int runUnityTests(void) {
     RUN_TEST(test_moveUsingArrayCall);
     RUN_TEST(test_heading_d);
     RUN_TEST(test_heading_d_gyro);
+    RUN_TEST(test_sen_acc_s);
     return UNITY_END();
 }
 
