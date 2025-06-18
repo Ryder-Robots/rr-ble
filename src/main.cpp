@@ -4,6 +4,7 @@ using namespace rrobot;
 
 // contains current state of robot during movements
 rrstate cstate_;
+RRBle ble_;
 
 // TODO: add timer to here, that also includes movement commands for callback
 void setup() {
@@ -17,9 +18,9 @@ void setup() {
     }
 
     // Initilize IMU
-    if (!IMU.begin()) {
+    if (!ble_.begin()) {
         rrevent e = rrevent(MSP_NONE);
-        Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_)));
+        Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_, ble_)));
 
         // hard block here.
         while (1) {
@@ -49,7 +50,7 @@ void loop() {
     buf[sz] = '\0';
     String s(buf);
     rrevent e = serde::deserialize(s);
-    sz = Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_)));
+    sz = Serial.print(serde::serialize(rrfunctions::_functions[POS(e.get_cmd())](e, cstate_, ble_)));
 }
 
 #ifdef NATIVE

@@ -14,44 +14,44 @@ using namespace rrobot;
  */
 // Does the same thing as stop. if the robot ever has any red flashing light though
 // to indicate something went wrong this would be where we would trigger then :)
-rrevent rrfunctions::none_r(rrevent e, rrstate& s) {
-    stop_r(rrevent(POS(MSP_STOP_P)), s);
+rrevent rrfunctions::none_r(rrevent e, rrstate& s, RrSensors& b) {
+    stop_r(rrevent(POS(MSP_STOP_P)), s, b);
     return rrevent(MSP_NONE);
 }
 
-rrevent rrfunctions::sonar_r(rrevent e, rrstate& s) { return rrevent(MSP_NONE, 2, rrerror::err_noimp); }
+rrevent rrfunctions::sonar_r(rrevent e, rrstate& s, RrSensors& b) { return rrevent(MSP_NONE, 2, rrerror::err_noimp); }
 
-bool rrfunctions::sen_acc_s(rrstate& s) {
+bool rrfunctions::sen_acc_s(rrstate& s, RrSensors& b) {
     float x = 0, y = 0, z = 0;
-    if (!IMU.accelerationAvailable()) {
+    if (!b.accelerationAvailable()) {
         return false;
     }
-    IMU.readAcceleration(x, y, z);
+    b.readAcceleration(x, y, z);
     s.set_sens(r_imu_sens::_ACC, true, x, y, z);
     return true;
 }
 
-bool rrfunctions::sen_gyro_s(rrstate& s) {
+bool rrfunctions::sen_gyro_s(rrstate& s, RrSensors& b) {
     float x = 0, y = 0, z = 0;
-    if (!IMU.gyroscopeAvailable()) {
+    if (!b.gyroscopeAvailable()) {
         return false;
     }
-    IMU.readGyroscope(x, y, z);
+    b.readGyroscope(x, y, z);
     s.set_sens(r_imu_sens::_GYRO, true, x, y, z);
     return true;
 }
 
-bool rrfunctions::sen_mag_s(rrstate& s) {
+bool rrfunctions::sen_mag_s(rrstate& s, RrSensors& b) {
     float x = 0, y = 0, z = 0;
-    if (!IMU.magneticFieldAvailable()) {
+    if (!b.magneticFieldAvailable()) {
         return false;
     }
-    IMU.readMagneticField(x, y, z);
+    b.readMagneticField(x, y, z);
     s.set_sens(r_imu_sens::_MAG, true, x, y, z);
     return true;
 }
 
-bool rrfunctions::move_s(rrstate& s) {
+bool rrfunctions::move_s(rrstate& s, RrSensors& b) {
     analogWrite(rrhbridge_map::_ENA, s.get_ena());
     analogWrite(rrhbridge_map::_ENB, s.get_enb());
     digitalWrite(rrhbridge_map::_IN1, s.get_in1());
@@ -62,14 +62,14 @@ bool rrfunctions::move_s(rrstate& s) {
     return true;
 }
 
-bool rrfunctions::stop_s(rrstate& s) {
+bool rrfunctions::stop_s(rrstate& s, RrSensors& b) {
     s.set_ena(0);
     s.set_enb(0);
     s.set_in1(LOW);
     s.set_in2(LOW);
     s.set_in3(LOW);
     s.set_in4(LOW);
-    move_s(s);
+    move_s(s, b);
     s.set_cstate(RR_ST_);
     return true;
 }
@@ -87,8 +87,8 @@ bool rrfunctions::stop_s(rrstate& s) {
  * @return rrevent An event containing the accelometer  sensor data if available,
  *                 or an event indicating no operation (MSP_NONE) if not available.
  */
-rrevent rrfunctions::sen_acc_r(rrevent e, rrstate& s) {
-    if (!sen_acc_s(s)) {
+rrevent rrfunctions::sen_acc_r(rrevent e, rrstate& s, RrSensors& b) {
+    if (!sen_acc_s(s, b)) {
         return rrevent(MSP_NONE, 2, rrerror::err_noimu);
     }
     float a = 0, x = 0, y = 0, z = 0;
@@ -111,8 +111,8 @@ rrevent rrfunctions::sen_acc_r(rrevent e, rrstate& s) {
  * @return rrevent An event containing the gyroscope  sensor data if available,
  *                 or an event indicating no operation (MSP_NONE) if not available.
  */
-rrevent rrfunctions::sen_gyro_r(rrevent e, rrstate& s) {
-    if (!sen_gyro_s(s)) {
+rrevent rrfunctions::sen_gyro_r(rrevent e, rrstate& s, RrSensors& b) {
+    if (!sen_gyro_s(s, b)) {
         return rrevent(MSP_NONE, 2, rrerror::err_noimu);
     }
     float a = 0, x = 0, y = 0, z = 0;
@@ -135,8 +135,8 @@ rrevent rrfunctions::sen_gyro_r(rrevent e, rrstate& s) {
  * @return rrevent An event containing the magnetic field sensor data if available,
  *                 or an event indicating no operation (MSP_NONE) if not available.
  */
-rrevent rrfunctions::sen_mag_r(rrevent e, rrstate& s) {
-    if (!sen_mag_s(s)) {
+rrevent rrfunctions::sen_mag_r(rrevent e, rrstate& s, RrSensors& b) {
+    if (!sen_mag_s(s, b)) {
         return rrevent(MSP_NONE, 2, rrerror::err_noimu);
     }
     float a = 0, x = 0, y = 0, z = 0;
@@ -157,9 +157,9 @@ rrevent rrfunctions::sen_mag_r(rrevent e, rrstate& s) {
  * @param s Reference to the state variable to be updated for move operation.
  * @return rrevent An event indicating a move should be performed (MSP_MOVE_P).
  */
-rrevent rrfunctions::stop_r(const rrevent e, rrstate& s) {
+rrevent rrfunctions::stop_r(const rrevent e, rrstate& s, RrSensors& b) {
     if (s.get_cstate() != RR_ST_) {
-        stop_s(s);
+        stop_s(s, b);
     }
     String vout[] = {
         String(s.get_ena()), String(s.get_enb()), String(s.get_in1()),
@@ -180,7 +180,7 @@ rrevent rrfunctions::stop_r(const rrevent e, rrstate& s) {
  * @param s Reference to the state variable to be updated for move operation.
  * @return rrevent An event indicating a move should be performed (MSP_MOVE_P).
  */
-rrevent rrfunctions::move_r(const rrevent e, rrstate& s) {
+rrevent rrfunctions::move_r(const rrevent e, rrstate& s, RrSensors& b) {
     if (s.get_cstate() != RR_MV_) {
         s.set_cstate(RR_MV_);
 
@@ -223,8 +223,8 @@ float rrfunctions::heading_d_gyro(rrstate& s) {
  * @param s Reference to the state variable, which should be updated for rotation.
  * @return rrevent An event indicating the result of the rotation handling (currently MSP_NONE).
  */
-rrevent rrfunctions::rotate_r(rrevent e, rrstate& s) {
-    sen_mag_s(s);
+rrevent rrfunctions::rotate_r(rrevent e, rrstate& s, RrSensors& b) {
+    sen_mag_s(s, b);
     float heading = heading_d_gyro(s),
           new_heading = heading_d(atof(e.get_data(r_imu_po::_X_P).c_str()), atof(e.get_data(r_imu_po::_Y_P).c_str()),
                                   atof(e.get_data(r_imu_po::_Z_P).c_str())),
@@ -244,9 +244,9 @@ rrevent rrfunctions::rotate_r(rrevent e, rrstate& s) {
     }
 
     while (i1 > i2) {
-        move_s(s);
+        move_s(s, b);
         delay(50);
-        sen_mag_s(s);
+        sen_mag_s(s, b);
         heading = heading_d_gyro(s);
 
         if (heading < new_heading) {
@@ -259,7 +259,7 @@ rrevent rrfunctions::rotate_r(rrevent e, rrstate& s) {
         String(s.get_ena()), String(s.get_enb()), String(s.get_in1()),
         String(s.get_in2()), String(s.get_in3()), String(s.get_in4()),
     };
-    stop_s(s);
+    stop_s(s, b);
     s.set_cstate(RR_RT_);
     return rrevent(MSP_ROTATE_P, 6, vout);
 }

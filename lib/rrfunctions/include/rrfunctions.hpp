@@ -7,11 +7,10 @@
 #include <rrevent.hpp>
 #include <rrstate.hpp>
 #include <rrutil.hpp>
-
-#include "Arduino_BMI270_BMM150.h"
+#include <rrble.hpp>
 
 using namespace rrobot;
-using execfunction = std::function<rrevent(rrevent&, rrstate&)>;
+using execfunction = std::function<rrevent(rrevent&, rrstate&, RrSensors&)>;
 
 // instructs command loop to continue on with last action.
 #define RR_NN_ 4
@@ -25,21 +24,21 @@ namespace rrobot {
 namespace rrfunctions {
 
 // state only functions for sensors
-bool sen_acc_s(rrstate& s);
-bool sen_gyro_s(rrstate& s);
-bool sen_mag_s(rrstate& s);
-bool move_s(rrstate& s);
-bool stop_s(rrstate& s);
+bool sen_acc_s(rrstate& s, RrSensors& b);
+bool sen_gyro_s(rrstate& s, RrSensors& b);
+bool sen_mag_s(rrstate& s, RrSensors& b);
+bool move_s(rrstate& s, RrSensors& b);
+bool stop_s(rrstate& s, RrSensors& b);
 
 // list of events that can be triggered
-rrevent none_r(rrevent e, rrstate& s);
-rrevent sonar_r(rrevent e, rrstate& s);
-rrevent sen_acc_r(rrevent e, rrstate& s);
-rrevent sen_gyro_r(rrevent e, rrstate& s);
-rrevent sen_mag_r(rrevent e, rrstate& s);
-rrevent stop_r(rrevent e, rrstate& s);
-rrevent move_r(rrevent e, rrstate& s);
-rrevent rotate_r(rrevent e, rrstate& s);
+rrevent none_r(rrevent e, rrstate& s, RrSensors& b);
+rrevent sonar_r(rrevent e, rrstate& s, RrSensors& b);
+rrevent sen_acc_r(rrevent e, rrstate& s, RrSensors& b);
+rrevent sen_gyro_r(rrevent e, rrstate& s, RrSensors& b);
+rrevent sen_mag_r(rrevent e, rrstate& s, RrSensors& b);
+rrevent stop_r(rrevent e, rrstate& s, RrSensors& b);
+rrevent move_r(rrevent e, rrstate& s, RrSensors& b);
+rrevent rotate_r(rrevent e, rrstate& s, RrSensors& b);
 
 /**
  * @brief get heading in degrees. Headings are mapped according to uTs, where magnometer will return the gravitation
