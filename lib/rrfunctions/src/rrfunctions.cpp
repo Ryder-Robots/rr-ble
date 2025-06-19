@@ -23,31 +23,34 @@ rrevent rrfunctions::sonar_r(rrevent e, rrstate& s, RrSensors& b) { return rreve
 
 bool rrfunctions::sen_acc_s(rrstate& s, RrSensors& b) {
     float x = 0, y = 0, z = 0;
-    if (!b.accelerationAvailable()) {
+    int a = b.accelerationAvailable();
+    if (!a) {
         return false;
     }
     b.readAcceleration(x, y, z);
-    s.set_sens(r_imu_sens::_ACC, true, x, y, z);
-    return true;
+    s.set_sens(r_imu_sens::_ACC, a, x, y, z);
+    return a;
 }
 
 bool rrfunctions::sen_gyro_s(rrstate& s, RrSensors& b) {
     float x = 0, y = 0, z = 0;
-    if (!b.gyroscopeAvailable()) {
+    int a = b.gyroscopeAvailable();
+    if (!a) {
         return false;
     }
     b.readGyroscope(x, y, z);
-    s.set_sens(r_imu_sens::_GYRO, true, x, y, z);
+    s.set_sens(r_imu_sens::_GYRO, a, x, y, z);
     return true;
 }
 
 bool rrfunctions::sen_mag_s(rrstate& s, RrSensors& b) {
     float x = 0, y = 0, z = 0;
-    if (!b.magneticFieldAvailable()) {
+    int a = b.magneticFieldAvailable();
+    if (!a) {
         return false;
     }
     b.readMagneticField(x, y, z);
-    s.set_sens(r_imu_sens::_MAG, true, x, y, z);
+    s.set_sens(r_imu_sens::_MAG, a, x, y, z);
     return true;
 }
 
@@ -93,7 +96,7 @@ rrevent rrfunctions::sen_acc_r(rrevent e, rrstate& s, RrSensors& b) {
     }
     float a = 0, x = 0, y = 0, z = 0;
     s.get_sens(r_imu_sens::_ACC, a, x, y, z);
-    String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
+    String data[4] = {String(a), String(x, 2), String(y, 2), String(z, 2)};
     rrevent r = rrevent(RR_COMMANDS[MSP_SENSOR_ACC_P], 4, data);
     return r;
 }
@@ -117,7 +120,7 @@ rrevent rrfunctions::sen_gyro_r(rrevent e, rrstate& s, RrSensors& b) {
     }
     float a = 0, x = 0, y = 0, z = 0;
     s.get_sens(r_imu_sens::_GYRO, a, x, y, z);
-    String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
+    String data[4] = {String(a), String(x, 2), String(y, 2), String(z, 2)};
     rrevent r = rrevent(RR_COMMANDS[MSP_SENSOR_GYRO_P], 4, data);
     return r;
 }
@@ -141,7 +144,7 @@ rrevent rrfunctions::sen_mag_r(rrevent e, rrstate& s, RrSensors& b) {
     }
     float a = 0, x = 0, y = 0, z = 0;
     s.get_sens(r_imu_sens::_MAG, a, x, y, z);
-    String data[4] = {String(1), String(x, 2), String(y, 2), String(z, 2)};
+    String data[4] = {String(a), String(x, 2), String(y, 2), String(z, 2)};
     rrevent r = rrevent(RR_COMMANDS[MSP_SENSOR_MAG_P], 4, data);
     return r;
 }
