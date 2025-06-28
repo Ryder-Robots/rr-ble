@@ -3,7 +3,9 @@
 using namespace rrobot;
 
 // PID variables
-double setpoint = 0; double input = 0; double output = 0; // Desired heading (forward)
+double setpoint = 0;
+double input = 0;
+double output = 0;  // Desired heading (forward)
 // Current heading (from gyro)
 // PID correction
 // PID tuning parameters
@@ -38,7 +40,7 @@ void setup() {
 
     // TODO need to initilize sonar here
 
-    // initlize PID algorithm 
+    // initlize PID algorithm
     _pid.SetMode(AUTOMATIC);
     // Correction range, this can be added to mappings as a constant.
     _pid.SetOutputLimits(-100, 100);
@@ -67,7 +69,7 @@ void loop() {
         executeCommand();
     }
     if (cstate_.get_cstate() == RR_MV_) {
-        rrmove::move_t(cstate_, ble_);
+        rrmove::move_t(cstate_, ble_, input, output);
     } else {
         delay(rrhbridge_map::_SAMPLE_TIME);
     }

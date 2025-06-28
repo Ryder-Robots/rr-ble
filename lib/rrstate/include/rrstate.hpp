@@ -44,6 +44,8 @@ class rrstate {
     void set_velocity(long v) {_velocity = v;}
     float get_velocity(){return _velocity;}
 
+    PID get_pid() {return _pid;}
+
     void set_sens(int sens, float avail, float x, float y, float z) {
         _sens[sens][r_imu_po::_AVAIL_P] = avail;
         _sens[sens][r_imu_po::_X_P] = x;

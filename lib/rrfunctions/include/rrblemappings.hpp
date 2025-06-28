@@ -120,8 +120,8 @@ const int _IN4 = D3;
 const int _ENA = D7;
 const int _ENB = D4;
 
-const int _PWM_VALUE = 255;
-const int _SAMPLE_TIME = 50;
+const int _PWM_VALUE = 150;
+const int _SAMPLE_TIME = 20;
 }  // namespace rrhbridge_map
 
 namespace rserial {

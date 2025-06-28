@@ -17,7 +17,7 @@ namespace rrmove {
  */
 float move_d_t(rrstate& s, RrSensors& b);
 
-void move_t(rrstate& s, RrSensors& b);
+void move_t(rrstate& s, RrSensors& b, double& input, double& output);
 }  // namespace rrmove
 }  // namespace rrobot
 
