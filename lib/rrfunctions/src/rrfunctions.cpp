@@ -248,7 +248,7 @@ rrevent rrfunctions::rotate_r(rrevent e, rrstate& s, RrSensors& b) {
 
     while (i1 > i2) {
         move_s(s, b);
-        delay(50);
+        delay(rrhbridge_map::_SAMPLE_TIME);
         sen_mag_s(s, b);
         heading = heading_d_gyro(s);
 

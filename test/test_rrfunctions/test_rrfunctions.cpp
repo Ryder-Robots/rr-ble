@@ -108,6 +108,24 @@ void test_sen_acc_s(void) {
     TEST_ASSERT_EQUAL(0, z);
 }
 
+void test_rotate_r_(void) {
+    rrstate _state;
+    MockSensors _ble;
+    When(Method(ArduinoFake(), analogWrite)).AlwaysReturn();
+    When(Method(ArduinoFake(), digitalWrite)).AlwaysReturn();
+
+    // set compass to north
+    _state.set_sens(r_imu_sens::_MAG,1,1,0,0);
+
+    // Rotate the drone to face east.
+    String data[] = {"1", "0", "1", "0"};
+    rrevent e(RR_COMMANDS[MSP_ROTATE_P], 4, data);
+    rrfunctions::rotate_r(e, _state, _ble);
+}
+
+void test_rotate_r(void) {
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_moveDoesSetState);
@@ -116,6 +134,7 @@ int runUnityTests(void) {
     RUN_TEST(test_heading_d);
     RUN_TEST(test_heading_d_gyro);
     RUN_TEST(test_sen_acc_s);
+    RUN_TEST(test_rotate_r);
     return UNITY_END();
 }
 
