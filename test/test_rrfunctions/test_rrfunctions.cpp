@@ -6,6 +6,15 @@
 using namespace rrobot;
 using namespace fakeit;
 
+// PID variables
+double setpoint = 0;
+double input = 0;
+double output = 0;  // Desired heading (forward)
+// Current heading (from gyro)
+// PID correction
+// PID tuning parameters
+double Kp = 1.0, Ki = 0.0, Kd = 0.05;
+
 class MockSensors : public RrSensors {
    public:
     virtual int begin() override { return 1; }
@@ -32,8 +41,10 @@ void setUp(void) {
 }
 
 void test_moveDoesSetState(void) {
+    When(Method(ArduinoFake(), millis)).AlwaysReturn(1);
+    PID _pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
     MockSensors _ble;
-    rrstate _state;
+    rrstate _state(_pid);
     _state.set_cstate(RR_ST_);
     rrfunctions::move_r(rrevent(RR_COMMANDS[MSP_MOVE_P]), _state, _ble);
     TEST_ASSERT_EQUAL_INT(RR_MV_, _state.get_cstate());
@@ -46,11 +57,13 @@ void test_moveDoesSetState(void) {
 }
 
 void test_noneDoesSetState(void) {
+    When(Method(ArduinoFake(), millis)).AlwaysReturn(1);
+    PID _pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
     When(Method(ArduinoFake(), analogWrite)).AlwaysReturn();
     When(Method(ArduinoFake(), digitalWrite)).AlwaysReturn();
 
     MockSensors _ble;
-    rrstate _state;
+    rrstate _state(_pid);
     _state.set_cstate(RR_MV_);
     rrfunctions::none_r(rrevent(RR_COMMANDS[MSP_NONE]), _state, _ble);
     TEST_ASSERT_EQUAL_INT(RR_ST_, _state.get_cstate());
@@ -66,8 +79,10 @@ void test_noneDoesSetState(void) {
 }
 
 void test_moveUsingArrayCall(void) {
+    When(Method(ArduinoFake(), millis)).AlwaysReturn(1);
+    PID _pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
     MockSensors _ble;
-    rrstate _state;
+    rrstate _state(_pid);
     _state.set_cstate(RR_ST_);
     rrevent e = rrevent(RR_COMMANDS[MSP_MOVE_P]);
     rrfunctions::_functions[POS(e.get_cmd())](e, _state, _ble);
@@ -86,7 +101,9 @@ void test_heading_d(void) {
 }
 
 void test_heading_d_gyro(void) {
-    rrstate _state;
+    When(Method(ArduinoFake(), millis)).AlwaysReturn(1);
+    PID _pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+    rrstate _state(_pid);
     _state.set_sens(r_imu_sens::_MAG, true, 0, 1, 0);
     TEST_ASSERT_EQUAL(true, (rrfunctions::heading_d_gyro(_state) == 90));  // East
 
@@ -95,7 +112,9 @@ void test_heading_d_gyro(void) {
 }
 
 void test_sen_acc_s(void) {
-    rrstate _state;
+    When(Method(ArduinoFake(), millis)).AlwaysReturn(1);
+    PID _pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+    rrstate _state(_pid);
     MockSensors _ble;
     _state.set_sens(r_imu_sens::_ACC, true, 0, 0, 0);
     rrfunctions::sen_acc_s(_state, _ble);
@@ -109,13 +128,15 @@ void test_sen_acc_s(void) {
 }
 
 void test_rotate_r_(void) {
-    rrstate _state;
+    When(Method(ArduinoFake(), millis)).AlwaysReturn(1);
+    PID _pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+    rrstate _state(_pid);
     MockSensors _ble;
     When(Method(ArduinoFake(), analogWrite)).AlwaysReturn();
     When(Method(ArduinoFake(), digitalWrite)).AlwaysReturn();
 
     // set compass to north
-    _state.set_sens(r_imu_sens::_MAG,1,1,0,0);
+    _state.set_sens(r_imu_sens::_MAG, 1, 1, 0, 0);
 
     // Rotate the drone to face east.
     String data[] = {"1", "0", "1", "0"};
@@ -123,8 +144,7 @@ void test_rotate_r_(void) {
     rrfunctions::rotate_r(e, _state, _ble);
 }
 
-void test_rotate_r(void) {
-}
+void test_rotate_r(void) {}
 
 int runUnityTests(void) {
     UNITY_BEGIN();

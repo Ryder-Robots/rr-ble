@@ -19,6 +19,10 @@
 #define MIN_UT -400
 #define MAX_UT 400
 
+// gravitation using meters per second.
+#define GV_M2 9.80665
+#define SEC 10000.00
+
 const int RR_CMDSZ = 8;
 const size_t RR_MX_E_SZ = 100;
 const char _TERM_CHAR = 0x1E;

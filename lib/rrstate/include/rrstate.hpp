@@ -1,12 +1,13 @@
 #ifndef RRSTATE_HPP
 #define RRSTATE_HPP
 
+#include <PID_v1.h>
 #include <rrblemappings.hpp>
 
 namespace rrobot {
 class rrstate {
    public:
-    rrstate() = default;
+    rrstate(PID& pid): _pid(pid) {}
     ~rrstate() = default;
 
     void set_cstate(int cstate) { _cstate = cstate; }
@@ -37,6 +38,12 @@ class rrstate {
 
     int get_in4() { return _in4; }
 
+    void set_last_time(long t) {_lt = t;}
+    long get_last_time(){return _lt;}
+
+    void set_velocity(long v) {_velocity = v;}
+    float get_velocity(){return _velocity;}
+
     void set_sens(int sens, float avail, float x, float y, float z) {
         _sens[sens][r_imu_po::_AVAIL_P] = avail;
         _sens[sens][r_imu_po::_X_P] = x;
@@ -53,12 +60,15 @@ class rrstate {
 
    private:
     int _cstate = RR_ST_;
+    long _lt = 0;
     int _ena = 0;
     int _enb = 0;
     int _in1 = 0;
     int _in2 = 0;
     int _in3 = 0;
     int _in4 = 0;
+    float _velocity = 0;
+    PID& _pid;
 
     float _sens[r_imu_sens::_SENS_SZ][r_imu_po::_SENS_SZ];
 };
