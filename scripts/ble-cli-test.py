@@ -1,6 +1,7 @@
 import serial
+import time
 
-port_name = '/dev/cu.usbmodem23201'
+port_name = '/dev/cu.usbmodem23301'
 baud_rate = 9600
 
 try:
@@ -20,6 +21,13 @@ try:
     # ser.write(command_str.encode('utf-8'))
     # response = ser.read(100)
     # print(f"Received: {response.decode('utf-8', errors='ignore')}")
+
+    for _ in range(3):
+        time.sleep(1)
+        command_str = "224;0;0;0;\x1E"
+        ser.write(command_str.encode('utf-8'))
+        response = ser.read(100)
+        print(f"Received: {response.decode('utf-8', errors='ignore')}")
 
     ser.close()
 except Exception as e:
