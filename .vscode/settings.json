@@ -67,6 +67,7 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "any": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "ios": "cpp"
     }
 }

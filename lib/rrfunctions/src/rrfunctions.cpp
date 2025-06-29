@@ -78,6 +78,36 @@ bool rrfunctions::stop_s(rrstate& s, RrSensors& b) {
 }
 
 /**
+ * @brief Handles the status event for the robot.
+ *
+ * This function gathers the current status information from the robot's state,
+ * including control state, distance delta, total distance travelled, and motor
+ * enable values. It packages these values into a response event for reporting
+ * or diagnostic purposes.
+ *
+ * @param e The input event that triggered the status request.
+ * @param s Reference to the state variable containing the robot's current status.
+ * @param b Reference to the sensor interface (unused in this function).
+ * @return rrevent An event containing the following status data as strings:
+ *         - [0]: Current control state
+ *         - [1]: Distance delta since last update
+ *         - [2]: Total distance travelled
+ *         - [3]: Motor A enable value (ENA)
+ *         - [4]: Motor B enable value (ENB)
+ */
+rrevent rrfunctions::status_r(rrevent e, rrstate& s, RrSensors& b) {
+    // 0: cstatus
+    // 1: distance delta
+    // 2: distance travelled
+    // 3: ena
+    // 4: enb
+    String data[5] = {String(s.get_cstate()), String(s.get_distance_delta()), String(s.get_distance_total()),
+                      String(s.get_ena()), String(s.get_enb())};
+    rrevent r = rrevent(RR_COMMANDS[MSP_STATUS_P], 5, data);
+    return r;
+}
+
+/**
  * @brief Handles the accelometer sensor event for the robot.
  *
  * This function reads the accelometer data from the IMU sensor if available.
@@ -185,6 +215,7 @@ rrevent rrfunctions::stop_r(const rrevent e, rrstate& s, RrSensors& b) {
  */
 rrevent rrfunctions::move_r(const rrevent e, rrstate& s, RrSensors& b) {
     if (s.get_cstate() != RR_MV_) {
+        s.set_distance_delta(DITANCE_DELTA);
         s.set_cstate(RR_MV_);
 
         // PWM values will need max and min, for the PID algorithm once implmented.

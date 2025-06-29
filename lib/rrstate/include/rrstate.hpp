@@ -60,6 +60,22 @@ class rrstate {
         z = _sens[sens][r_imu_po::_Z_P];
     }
 
+    void set_distance_delta(long d) {
+        _distance_delta = d;
+    }
+
+    long get_distance_delta() {
+        return _distance_delta;
+    }
+
+    void set_distance_total(long d) {
+        _distance_total += d;
+    }
+
+    long get_distance_total() {
+        return _distance_total;
+    }
+
    private:
     int _cstate = RR_ST_;
     long _lt = 0;
@@ -71,6 +87,9 @@ class rrstate {
     int _in4 = 0;
     float _velocity = 0;
     PID& _pid;
+
+    long _distance_delta = 0;
+    long _distance_total = 0;
 
     float _sens[r_imu_sens::_SENS_SZ][r_imu_po::_SENS_SZ];
 };

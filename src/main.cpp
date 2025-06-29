@@ -9,9 +9,7 @@ double output = 0;  // Desired heading (forward)
 // Current heading (from gyro)
 // PID correction
 // PID tuning parameters
-double Kp = 1.0, Ki = 0.0, Kd = 0.05;
-
-PID _pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+PID _pid(&input, &output, &setpoint, r_pid::_KP, r_pid::_KI, r_pid::_KD, DIRECT);
 
 // contains current state of robot during movements
 rrstate cstate_(_pid);
@@ -43,7 +41,7 @@ void setup() {
     // initlize PID algorithm
     _pid.SetMode(AUTOMATIC);
     // Correction range, this can be added to mappings as a constant.
-    _pid.SetOutputLimits(-100, 100);
+    _pid.SetOutputLimits(r_pid::_OUT_LIMIT_LOW, r_pid::_OUT_LIMIT_HIGH);
 }
 
 void executeCommand() {

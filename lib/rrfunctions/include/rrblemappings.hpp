@@ -23,7 +23,7 @@
 #define GV_M2 9.80665
 #define SEC 10000.00
 
-const int RR_CMDSZ = 8;
+const int RR_CMDSZ = 9;
 const size_t RR_MX_E_SZ = 100;
 const char _TERM_CHAR = 0x1E;
 const char _DELIMETER = 0x3B;
@@ -31,6 +31,11 @@ const char _DELIMETER = 0x3B;
 #define RR_ST_ 220
 #define RR_MV_ 221
 #define RR_RT_ 223
+// return motor status
+#define RR_SS_ 224
+
+// amount of centimeters to travel in a given delta
+#define DITANCE_DELTA 30
 
 /*
  * Precompiler helpers for when Digitial variable are not defined.
@@ -85,6 +90,7 @@ const int RR_COMMANDS[] = {
     220,  // MSP_STOP
     221,  // MSP_MOVE
     223,  // MSP_ROTATE
+    224,  // MSP_STATUS
 };
 
 const int MSP_NONE = 0;
@@ -95,6 +101,7 @@ const int MSP_SENSOR_MAG_P = 4;
 const int MSP_STOP_P = 5;
 const int MSP_MOVE_P = 6;
 const int MSP_ROTATE_P = 7;
+const int MSP_STATUS_P = 8;
 
 /**
  * @headerfile rrhbridge_map
@@ -136,6 +143,14 @@ const int _Z_P = 3;
 
 const int _SENS_SZ = 4;
 }  // namespace r_imu_po
+
+namespace r_pid {
+    const double _KP = 1.0;
+    const double _KI = 0.0;
+    const double _KD = 0.05;
+    const double _OUT_LIMIT_LOW = -100;
+    const double _OUT_LIMIT_HIGH = 100;
+}
 
 namespace r_imu_sens {
 const int _GYRO = 0;

@@ -39,6 +39,7 @@ rrevent sen_mag_r(rrevent e, rrstate& s, RrSensors& b);
 rrevent stop_r(rrevent e, rrstate& s, RrSensors& b);
 rrevent move_r(rrevent e, rrstate& s, RrSensors& b);
 rrevent rotate_r(rrevent e, rrstate& s, RrSensors& b);
+rrevent status_r(rrevent e, rrstate& s, RrSensors& b);
 
 /**
  * @brief get heading in degrees. Headings are mapped according to uTs, where magnometer will return the gravitation
@@ -71,6 +72,7 @@ float heading_d_gyro(rrstate& s);
  *   - 220:  MSP_STOP
  *   - 221:  MSP_MOVE
  *   - 223:  MSP_ROTATE
+ *   - 224:  MSP_STATUS
  */
 // registered functions that will be executed in main loop.
 const execfunction _functions[] = {
@@ -82,6 +84,7 @@ const execfunction _functions[] = {
     stop_r,      // 5
     move_r,      // 6
     rotate_r,    // 7
+    status_r,    // 8
 };
 }  // namespace rrfunctions
 

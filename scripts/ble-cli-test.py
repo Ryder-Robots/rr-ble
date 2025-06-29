@@ -7,6 +7,7 @@ try:
     # Open serial port with 9600 8-N-1 (defaults)
     ser = serial.Serial(port_name, baud_rate, timeout=1)
 
+    # , "221"
     commands = ["58", "216", "217", "218", "220", "221"];
     for cmd in commands:
         command_str = f"{cmd};0;0;0;\x1E"
